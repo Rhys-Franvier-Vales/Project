@@ -1,0 +1,374 @@
+/* ============ SITE HEADER / NAVBAR ============ */
+.site-header {
+  width: 100%;
+  padding: 14px 24px;
+  background: #ffffff;
+}
+
+.header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.site-logo {
+  height: 68px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.site-nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 44px;
+  background: #fff;
+  border: 0.1px solid #000;
+  border-radius: 10px;
+  padding: 13px 28px;
+  max-width: 714px;
+}
+
+.site-nav .nav-link {
+  color: #000;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.site-nav .nav-link:hover {
+  opacity: 0.65;
+}
+
+/* Dropdown-enabled nav buttons */
+.site-nav .nav-item {
+  position: relative;
+}
+
+.site-nav .dropdown-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.site-nav .dropdown-toggle:hover,
+.site-nav .nav-item.open .dropdown-toggle {
+  transform: scale(1.12);
+}
+
+.site-nav .nav-item .dropdown-menu {
+  position: absolute;
+  display: block;
+  top: calc(100% + 14px);
+  left: 50%;
+  min-width: 190px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  padding: 8px 0;
+  margin: 0;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-6px) scale(0.85);
+  transform-origin: top center;
+  transition:
+    opacity 0.2s ease,
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 50;
+}
+
+.site-nav .nav-item:hover .dropdown-menu,
+.site-nav .nav-item.open .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.site-nav .dropdown-menu li a {
+  display: block;
+  padding: 9px 20px;
+  color: #000;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.site-nav .dropdown-menu li a:hover {
+  background: #f2f2f2;
+}
+
+.v-connect-btn {
+  flex-shrink: 0;
+  background: #fff;
+  border: 0.1px solid #000;
+  border-radius: 10px;
+  padding: 13px 20px;
+  color: #000;
+  font-size: 16px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.v-connect-btn:hover {
+  opacity: 0.8;
+}
+
+@media (max-width: 992px) {
+  .site-nav {
+    gap: 18px;
+    padding: 10px 16px;
+    overflow-x: auto;
+  }
+  .site-logo {
+    height: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .site-nav {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+:root {
+  --parallax-radius: 40px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: #fff;
+  overflow-x: hidden;
+  font-family: "Krona One", sans-serif;
+}
+
+/* Container for 3D perspective */
+.parallax-wrapper {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  min-height: 100vh;
+}
+
+/* ============ 3D PARALLAX SECTION ============ */
+.parallax-section {
+  position: relative;
+  width: 100%;
+  max-width: 1372px;
+  aspect-ratio: 1372 / 677;
+  border-radius: var(--parallax-radius);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  box-shadow:
+    0 35px 80px -15px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(79, 70, 229, 0.15);
+  background: #0a0a12;
+  cursor: pointer;
+  will-change: transform;
+  transition: box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.parallax-section:hover {
+  box-shadow:
+    0 45px 100px -15px rgba(0, 0, 0, 0.85),
+    0 0 60px rgba(99, 102, 241, 0.25);
+}
+
+/* Inner 3D stage that tilts */
+.parallax-card {
+  position: absolute;
+  inset: -5%;
+  width: 110%;
+  height: 110%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.parallax-section .layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* Layer 1 — Sky (Deepest Z, slowest movement) */
+.parallax-section .layer-sky {
+  background-image: url("https://www.figma.com/api/mcp/asset/ae60ff7f-ec31-4599-8c2b-036894377d1b.png");
+  background-size: cover;
+  transform: translateZ(0px) scale(1.25);
+  z-index: 1;
+}
+
+/* Layer 2 — Title (Sandwiched in 3D space) */
+.parallax-section .parallax-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 7%;
+  margin: 0;
+  font-family: "Krona One", sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 11.5vw, 10rem);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+  pointer-events: auto;
+  cursor: default;
+  z-index: 2;
+  transform: translateZ(20px);
+  will-change: transform;
+
+  /* Gradient fill with soft glow, plus a cursor-following color spot */
+  background-image:
+    radial-gradient(
+      circle 170px at var(--glow-x, 50%) var(--glow-y, 50%),
+      var(--glow-color, transparent) 0%,
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(240, 240, 255, 0.9) 45%,
+      rgba(180, 185, 210, 0.7) 100%
+    );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
+}
+
+/* Layer 3 — Building */
+.parallax-section .layer-building-back {
+  background-image: url("https://www.figma.com/api/mcp/asset/5f8ac08e-9146-44a4-87de-05756cb8df54.png");
+  top: auto;
+  bottom: 7.5%;
+  height: 100%;
+  background-size: contain;
+  transform: translateZ(35px) scale(1.1);
+  z-index: 3;
+}
+
+/* Subtle interactive lighting / reflection overlay */
+.parallax-glare {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.03) 30%,
+    transparent 65%
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+
+/* Interactive hint pill */
+.interactive-badge {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(100px);
+  z-index: 20;
+  background: rgba(15, 15, 25, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.interactive-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #6366f1;
+  box-shadow: 0 0 10px #6366f1;
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --parallax-radius: 24px;
+  }
+
+  .parallax-wrapper {
+    padding: 20px 10px;
+    min-height: auto;
+  }
+
+  .parallax-section {
+    aspect-ratio: 1372 / 850;
+  }
+
+  .parallax-section .parallax-title {
+    padding-top: 10%;
+  }
+
+  .interactive-badge {
+    bottom: 16px;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+  }
+}
