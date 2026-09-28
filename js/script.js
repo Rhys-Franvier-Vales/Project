@@ -26,7 +26,7 @@ const PARALLAX_CONFIG = {
   layers: {
     sky: { depth: 8, scrollSpeed: 0.08, z: 0, baseScale: 1.25 },
     title: { depth: 16, scrollSpeed: 0.16, z: 20, baseScale: 1.0 },
-    buildingBack: { depth: 25, scrollSpeed: 0.24, z: 35, baseScale: 1.1 },
+    buildingBack: { depth: 25, scrollSpeed: 0.24, z: 35, baseScale: 1.15 },
   },
 };
 
@@ -213,33 +213,117 @@ const PARALLAX_CONFIG = {
   });
 
   // =========================================================================
-  // 🎨 TITLE HOVER GLOW — cursor-following, random blue/green/maroon
+  // ✨ TITLE ENTRANCE ANIMATION — Quick letter-by-letter slide & fade up
   // =========================================================================
-  const glowColors = ["#3b82f6", "#16a34a", "#800000"]; // blue, green, maroon
-  let glowInterval = null;
+  function initTitleEntrance() {
+    if (!title) return;
 
-  function pickRandomGlowColor() {
-    const color = glowColors[Math.floor(Math.random() * glowColors.length)];
-    title.style.setProperty("--glow-color", color);
+    const rawText = title.textContent.trim();
+    title.innerHTML = "";
+
+    const charElements = [];
+    [...rawText].forEach((char) => {
+      const span = document.createElement("span");
+      span.className = "char";
+      span.textContent = char === " " ? "\u00A0" : char;
+      title.appendChild(span);
+      charElements.push(span);
+    });
+
+    if (typeof gsap !== "undefined") {
+      gsap.from(charElements, {
+        y: 60,
+        opacity: 0,
+        duration: 0.85,
+        stagger: 0.05, // Quick, crisp sequential reveal
+        ease: "power3.out",
+        delay: 0.15,
+      });
+    } else {
+      // CSS Fallback animation
+      charElements.forEach((span, idx) => {
+        span.style.opacity = "0";
+        span.style.transform = "translateY(60px)";
+        span.style.transition = `transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + idx * 0.05}s, opacity 0.85s ease ${0.15 + idx * 0.05}s`;
+      });
+      requestAnimationFrame(() => {
+        charElements.forEach((span) => {
+          span.style.opacity = "1";
+          span.style.transform = "translateY(0)";
+        });
+      });
+    }
   }
 
-  if (title) {
-    title.addEventListener("mouseenter", () => {
-      pickRandomGlowColor();
-      glowInterval = setInterval(pickRandomGlowColor, 550);
-    });
+  // =========================================================================
+  // 🚀 NAVBAR ENTRANCE ANIMATION — Smooth sequential fade-down
+  // =========================================================================
+  function initNavbarEntrance() {
+    const siteLogo = document.querySelector(".site-logo");
+    const siteNav = document.querySelector(".site-nav");
+    const navItems = document.querySelectorAll(".site-nav > *");
+    const vConnectBtn = document.querySelector(".v-connect-btn");
 
-    title.addEventListener("mousemove", (e) => {
-      const rect = title.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      title.style.setProperty("--glow-x", `${x}%`);
-      title.style.setProperty("--glow-y", `${y}%`);
-    });
+    if (typeof gsap !== "undefined") {
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    title.addEventListener("mouseleave", () => {
-      clearInterval(glowInterval);
-      title.style.setProperty("--glow-color", "transparent");
-    });
+      tl.from(siteLogo, {
+        y: -35,
+        opacity: 0,
+        scale: 0.92,
+        duration: 0.85,
+        clearProps: "transform,opacity,scale",
+      })
+        .from(
+          siteNav,
+          {
+            y: -25,
+            opacity: 0,
+            duration: 0.75,
+            clearProps: "transform,opacity",
+          },
+          "-=0.6",
+        )
+        .from(
+          navItems,
+          {
+            y: -18,
+            opacity: 0,
+            duration: 0.55,
+            stagger: 0.05, // Quick, snappy word-by-word fade down
+            clearProps: "transform,opacity",
+          },
+          "-=0.5",
+        )
+        .from(
+          vConnectBtn,
+          {
+            y: -25,
+            opacity: 0,
+            duration: 0.75,
+            clearProps: "transform,opacity",
+          },
+          "-=0.6",
+        );
+    } else {
+      // CSS Fallback
+      [siteLogo, siteNav, vConnectBtn].forEach((el, i) => {
+        if (!el) return;
+        el.style.opacity = "0";
+        el.style.transform = "translateY(-30px)";
+        el.style.transition = `transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.08}s, opacity 0.75s ease ${i * 0.08}s`;
+      });
+      requestAnimationFrame(() => {
+        [siteLogo, siteNav, vConnectBtn].forEach((el) => {
+          if (!el) return;
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        });
+      });
+    }
   }
+
+  // Run entrance animations
+  initNavbarEntrance();
+  initTitleEntrance();
 })();
