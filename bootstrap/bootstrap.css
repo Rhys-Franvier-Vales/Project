@@ -574,3 +574,107 @@ body {
     transform: translateY(-110px) rotate(0deg) scale(1.04);
   }
 }
+
+/* ============ DOT GRID / WHAT SHAPES US SECTION ============ */
+.dotgrid-section {
+  width: 100%;
+  background-color: #000;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.6px, transparent 1.6px);
+  background-size: 32px 32px;
+  padding: 90px 6% 120px;
+  overflow: hidden;
+}
+
+.dotgrid-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.dotgrid-heading {
+  text-align: center;
+  font-family: "Funnel Display", "Krona One", sans-serif;
+  font-weight: 600;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  color: #fff;
+  margin: 0 0 70px;
+}
+
+.dotgrid-heading .hl-green { color: #a1ff80; }
+.dotgrid-heading .hl-red { color: #ff8082; }
+.dotgrid-heading .hl-yellow { color: #f7ff81; }
+
+.sticky-notes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 50px;
+}
+
+.sticky-note {
+  width: 320px;
+  padding: 26px 24px 30px;
+  position: relative;
+}
+
+.note-label {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  font-family: "Funnel Display", sans-serif;
+  font-size: 34px;
+  padding: 4px 14px;
+  margin-bottom: 14px;
+}
+
+.note-label-academics {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.note-text {
+  font-family: "Geist", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #000;
+  margin: 0;
+}
+
+.note-vision {
+  background: #a1ff80;
+  transform: rotate(-4deg);
+  box-shadow: 10px 4px 4px rgba(0, 0, 0, 0.35);
+  margin-top: 20px;
+}
+
+.note-mission {
+  background: #ff8082;
+  transform: rotate(-2deg);
+  box-shadow: 16px -9px 4px rgba(0, 0, 0, 0.35);
+  margin-top: 60px;
+}
+
+.note-academics {
+  background: #f7ff81;
+  transform: rotate(11.5deg);
+  box-shadow: 9px -1px 4px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 900px) {
+  .sticky-note {
+    width: 46%;
+  }
+}
+
+@media (max-width: 600px) {
+  .dotgrid-section {
+    padding: 60px 6% 80px;
+  }
+  .sticky-notes {
+    gap: 30px;
+  }
+  .sticky-note {
+    width: 100%;
+    transform: none !important;
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25) !important;
+  }
+}
