@@ -55,6 +55,12 @@
   src: url("../assets/fonts/Geist-SemiBold.ttf") format("truetype");
 }
 
+/* ============ BASE & OVERFLOW ============ */
+html,
+body {
+  overflow-x: hidden;
+}
+
 /* ============ SITE HEADER / NAVBAR ============ */
 .site-header {
   width: 100%;

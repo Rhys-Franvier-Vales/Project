@@ -422,99 +422,175 @@ const PARALLAX_CONFIG = {
       }
     }
 
-    // 3. Section 3: Dotgrid ("What Shapes Us") Section & Sticky Notes Card Reveal (CodeGrid style)
+    // 3. Section 3: Dotgrid ("What Shapes Us") Notes (Fly-in from Right on Enter -> Fly-away to Left on Exit)
     const dotgridSection = document.querySelector(".dotgrid-section");
     if (dotgridSection) {
       const heading = dotgridSection.querySelector(".dotgrid-heading");
       const noteVision = dotgridSection.querySelector(".note-vision");
       const noteAcademics = dotgridSection.querySelector(".note-academics");
       const noteMission = dotgridSection.querySelector(".note-mission");
+      const notes = [noteVision, noteAcademics, noteMission].filter(Boolean);
 
-      const animateCards = (tl) => {
+      // Initial offscreen state before entering
+      gsap.set(notes, { willChange: "transform, opacity", x: "130vw", opacity: 0 });
+      if (heading) gsap.set(heading, { opacity: 0, y: 40 });
+
+      function flyInFromRight() {
+        gsap.killTweensOf([heading, ...notes]);
         if (heading) {
-          tl.from(heading, {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 40 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
+          );
+        }
+        if (noteVision) {
+          gsap.fromTo(
+            noteVision,
+            { x: "120vw", rotation: 25, opacity: 0 },
+            { x: 0, rotation: -3.5, opacity: 1, duration: 0.85, ease: "back.out(1.2)", delay: 0.05 },
+          );
+        }
+        if (noteAcademics) {
+          gsap.fromTo(
+            noteAcademics,
+            { x: "140vw", rotation: -18, opacity: 0 },
+            { x: 0, rotation: 12.5, opacity: 1, duration: 0.85, ease: "back.out(1.25)", delay: 0.12 },
+          );
+        }
+        if (noteMission) {
+          gsap.fromTo(
+            noteMission,
+            { x: "160vw", rotation: 22, opacity: 0 },
+            { x: 0, rotation: -1.5, opacity: 1, duration: 0.85, ease: "back.out(1.2)", delay: 0.18 },
+          );
+        }
+      }
+
+      function flyAwayToLeft() {
+        gsap.killTweensOf([heading, ...notes]);
+        if (heading) {
+          gsap.to(heading, { opacity: 0, y: -35, duration: 0.45, ease: "power2.in" });
+        }
+        if (noteVision) {
+          gsap.to(noteVision, {
+            x: "-125vw",
+            rotation: -26,
             opacity: 0,
-            y: 40,
-            duration: 0.75,
-            ease: "power3.out",
-            clearProps: "opacity,transform",
+            duration: 0.55,
+            ease: "power2.in",
           });
         }
-
-        if (noteVision) {
-          tl.from(
-            noteVision,
-            {
-              opacity: 0,
-              x: 80,
-              y: 100,
-              scale: 0.7,
-              rotation: 6,
-              duration: 0.9,
-              ease: "back.out(1.3)",
-              clearProps: "opacity,transform",
-            },
-            "-=0.4",
-          );
-        }
-
         if (noteAcademics) {
-          tl.from(
-            noteAcademics,
-            {
-              opacity: 0,
-              x: -80,
-              y: 90,
-              scale: 0.7,
-              rotation: -8,
-              duration: 0.9,
-              ease: "back.out(1.35)",
-              clearProps: "opacity,transform",
-            },
-            "-=0.72",
-          );
+          gsap.to(noteAcademics, {
+            x: "-145vw",
+            rotation: 22,
+            opacity: 0,
+            duration: 0.55,
+            delay: 0.05,
+            ease: "power2.in",
+          });
         }
-
         if (noteMission) {
-          tl.from(
-            noteMission,
-            {
-              opacity: 0,
-              x: 0,
-              y: 120,
-              scale: 0.7,
-              rotation: 4,
-              duration: 0.95,
-              ease: "back.out(1.25)",
-              clearProps: "opacity,transform",
-            },
-            "-=0.72",
+          gsap.to(noteMission, {
+            x: "-165vw",
+            rotation: -22,
+            opacity: 0,
+            duration: 0.55,
+            delay: 0.09,
+            ease: "power2.in",
+          });
+        }
+      }
+
+      function flyInFromLeft() {
+        gsap.killTweensOf([heading, ...notes]);
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: -30 },
+            { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
           );
         }
-      };
+        if (noteVision) {
+          gsap.fromTo(
+            noteVision,
+            { x: "-125vw", rotation: -26, opacity: 0 },
+            { x: 0, rotation: -3.5, opacity: 1, duration: 0.85, ease: "back.out(1.2)", delay: 0.05 },
+          );
+        }
+        if (noteAcademics) {
+          gsap.fromTo(
+            noteAcademics,
+            { x: "-145vw", rotation: 22, opacity: 0 },
+            { x: 0, rotation: 12.5, opacity: 1, duration: 0.85, ease: "back.out(1.25)", delay: 0.12 },
+          );
+        }
+        if (noteMission) {
+          gsap.fromTo(
+            noteMission,
+            { x: "-165vw", rotation: -22, opacity: 0 },
+            { x: 0, rotation: -1.5, opacity: 1, duration: 0.85, ease: "back.out(1.2)", delay: 0.18 },
+          );
+        }
+      }
+
+      function flyAwayToRight() {
+        gsap.killTweensOf([heading, ...notes]);
+        if (heading) {
+          gsap.to(heading, { opacity: 0, y: 40, duration: 0.45, ease: "power2.in" });
+        }
+        if (noteVision) {
+          gsap.to(noteVision, {
+            x: "120vw",
+            rotation: 25,
+            opacity: 0,
+            duration: 0.55,
+            ease: "power2.in",
+          });
+        }
+        if (noteAcademics) {
+          gsap.to(noteAcademics, {
+            x: "140vw",
+            rotation: -18,
+            opacity: 0,
+            duration: 0.55,
+            delay: 0.05,
+            ease: "power2.in",
+          });
+        }
+        if (noteMission) {
+          gsap.to(noteMission, {
+            x: "160vw",
+            rotation: 22,
+            opacity: 0,
+            duration: 0.55,
+            delay: 0.09,
+            ease: "power2.in",
+          });
+        }
+      }
 
       if (typeof ScrollTrigger !== "undefined") {
-        const shapesTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: dotgridSection,
-            start: "top 78%",
-            toggleActions: "play none none none",
-          },
+        ScrollTrigger.create({
+          trigger: dotgridSection,
+          start: "top 60%",
+          end: "bottom 40%",
+          onEnter: () => flyInFromRight(),
+          onLeave: () => flyAwayToLeft(),
+          onEnterBack: () => flyInFromLeft(),
+          onLeaveBack: () => flyAwayToRight(),
         });
-        animateCards(shapesTl);
       } else {
-        // Fallback with IntersectionObserver
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
-                observer.disconnect();
-                const shapesTl = gsap.timeline();
-                animateCards(shapesTl);
+                flyInFromRight();
               }
             });
           },
-          { threshold: 0.15 },
+          { threshold: 0.2 },
         );
         observer.observe(dotgridSection);
       }
@@ -554,7 +630,7 @@ const PARALLAX_CONFIG = {
       }, 650);
     }
 
-    // Wheel event: small scroll gesture triggers smooth jump to next/prev section
+    // Wheel event: 1 small scroll gesture jumps to next/prev section instantly
     window.addEventListener(
       "wheel",
       (e) => {
