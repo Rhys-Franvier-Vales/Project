@@ -7,6 +7,54 @@
   src: url("../assets/fonts/KronaOne-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Funnel Display";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/FunnelDisplay-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Funnel Display";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/FunnelDisplay-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Funnel Display";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/FunnelDisplay-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../assets/fonts/Geist-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/Geist-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Geist";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/Geist-SemiBold.ttf") format("truetype");
+}
+
 /* ============ SITE HEADER / NAVBAR ============ */
 .site-header {
   width: 100%;
@@ -606,124 +654,168 @@ body {
 .dotgrid-section {
   width: 100%;
   min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
-  background-color: #000;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.6px, transparent 1.6px);
-  background-size: 32px 32px;
-  padding: 90px 6% 120px;
+  justify-content: center;
+  background-color: #020202;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.75) 1.5px, transparent 1.5px);
+  background-size: 36px 36px;
+  padding: 60px 6%;
   overflow: hidden;
+  position: relative;
 }
 
 .dotgrid-inner {
-  max-width: 1680px;
+  max-width: 1100px;
+  width: 100%;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .dotgrid-heading {
   text-align: center;
   font-family: "Funnel Display", "Krona One", sans-serif;
-  font-weight: 600;
-  font-size: clamp(2.2rem, 5vw, 4.5rem);
-  color: #fff;
-  margin: 0 0 70px;
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  margin: 0 0 45px;
 }
 
 .dotgrid-heading .hl-green {
-  color: #a1ff80;
+  color: #9cfc76;
 }
 
 .dotgrid-heading .hl-red {
-  color: #ff8082;
+  color: #ff7c7e;
 }
 
 .dotgrid-heading .hl-yellow {
-  color: #f7ff81;
+  color: #fbfd7b;
 }
 
+/* Triangle / Collage Sticky Notes Layout */
 .sticky-notes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 50px;
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 60px;
+  row-gap: 20px;
+  justify-items: center;
+  align-items: start;
 }
 
 .sticky-note {
-  width: 320px;
-  padding: 26px 24px 30px;
+  width: min(340px, 42vw);
+  min-height: 250px;
+  padding: 22px 22px 28px;
+  border-radius: 2px;
   position: relative;
-  transition: transform 0.35s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.35s ease;
-  cursor: pointer;
-  will-change: transform;
-}
-
-.sticky-note:hover {
-  transform: translateY(-10px) scale(1.04) !important;
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.5) !important;
-  z-index: 10;
 }
 
 .note-label {
   display: inline-block;
-  background: #000;
-  color: #fff;
+  background: #000000;
+  color: #ffffff;
   font-family: "Funnel Display", sans-serif;
-  font-size: 34px;
-  padding: 4px 14px;
-  margin-bottom: 14px;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  padding: 2px 12px 4px;
+  border-radius: 2px;
+  margin-bottom: 16px;
 }
 
 .note-label-academics {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Funnel Display", sans-serif;
 }
 
 .note-text {
-  font-family: "Geist", sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: #000;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #000000;
   margin: 0;
 }
 
+/* 1. Vision (Top-Left, tilted left) */
 .note-vision {
-  background: #a1ff80;
-  transform: rotate(-4deg);
-  box-shadow: 10px 4px 4px rgba(0, 0, 0, 0.35);
-  margin-top: 20px;
+  grid-column: 1;
+  grid-row: 1;
+  width: min(330px, 40vw);
+  background: #9cfc76;
+  transform: rotate(-3.5deg);
+  margin-right: -15px;
+  z-index: 2;
 }
 
-.note-mission {
-  background: #ff8082;
-  transform: rotate(-2deg);
-  box-shadow: 16px -9px 4px rgba(0, 0, 0, 0.35);
-  margin-top: 60px;
-}
-
+/* 2. Academics (Top-Right, tilted right, OVER the red Mission note) */
 .note-academics {
-  background: #f7ff81;
-  transform: rotate(11.5deg);
-  box-shadow: 9px -1px 4px rgba(0, 0, 0, 0.35);
+  grid-column: 2;
+  grid-row: 1;
+  width: min(330px, 40vw);
+  background: #fbfd7b;
+  transform: rotate(12.5deg);
+  margin-top: 25px;
+  margin-left: -30px;
+  z-index: 5; /* Positioned on top of the red card */
 }
 
-@media (max-width: 900px) {
-  .sticky-note {
-    width: 46%;
-  }
+/* 3. Mission (Bottom-Center, wider rectangular card, underneath Academics) */
+.note-mission {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  width: min(420px, 52vw); /* Noticeably wider card */
+  background: #ff7c7e;
+  transform: rotate(-1.5deg);
+  margin-top: -35px;
+  margin-left: 20px;
+  z-index: 1; /* Underneath the yellow card */
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .dotgrid-section {
-    padding: 60px 6% 80px;
+    padding: 50px 6%;
+    height: auto;
+    min-height: 100vh;
   }
 
   .sticky-notes {
-    gap: 30px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    row-gap: 25px;
+    max-width: 360px;
   }
 
   .sticky-note {
     width: 100%;
-    transform: none !important;
-    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.25) !important;
+    min-height: auto;
+    margin: 0 !important;
+  }
+
+  .note-vision {
+    grid-column: 1;
+    grid-row: auto;
+    transform: rotate(-2deg);
+  }
+
+  .note-academics {
+    grid-column: 1;
+    grid-row: auto;
+    transform: rotate(4deg);
+  }
+
+  .note-mission {
+    grid-column: 1;
+    grid-row: auto;
+    transform: rotate(-1deg);
   }
 }
