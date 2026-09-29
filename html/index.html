@@ -16,88 +16,92 @@
   </head>
 
   <body>
-    <!-- Site header: logo, navbar, V-Connect -->
-    <header class="site-header">
-      <div class="header-inner">
-        <img
-          src="../assets/logo.png"
-          alt="Shree Damodar College of Commerce &amp; Economics"
-          class="site-logo"
-        />
+    <!-- Section 1: Hero Page Section -->
+    <section class="snap-section hero-snap-section" id="heroSection">
+      <!-- Site header: logo, navbar, V-Connect -->
+      <header class="site-header">
+        <div class="header-inner">
+          <img
+            src="../assets/logo.png"
+            alt="Shree Damodar College of Commerce &amp; Economics"
+            class="site-logo"
+          />
 
-        <nav class="site-nav">
-          <a href="#" class="nav-link">About Us</a>
+          <nav class="site-nav">
+            <a href="#" class="nav-link">About Us</a>
 
-          <div class="nav-item">
-            <button type="button" class="nav-link dropdown-toggle">
-              Admissions
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Undergraduate Programs</a></li>
-              <li><a href="#">Postgraduate Programs</a></li>
-              <li><a href="#">Admission Process</a></li>
-            </ul>
-          </div>
+            <div class="nav-item">
+              <button type="button" class="nav-link dropdown-toggle">
+                Admissions
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Undergraduate Programs</a></li>
+                <li><a href="#">Postgraduate Programs</a></li>
+                <li><a href="#">Admission Process</a></li>
+              </ul>
+            </div>
 
-          <div class="nav-item">
-            <button type="button" class="nav-link dropdown-toggle">
-              Community
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Events</a></li>
-              <li><a href="#">Notices</a></li>
-              <li><a href="#">Alumni</a></li>
-            </ul>
-          </div>
+            <div class="nav-item">
+              <button type="button" class="nav-link dropdown-toggle">
+                Community
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Events</a></li>
+                <li><a href="#">Notices</a></li>
+                <li><a href="#">Alumni</a></li>
+              </ul>
+            </div>
 
-          <div class="nav-item">
-            <button type="button" class="nav-link dropdown-toggle">
-              Student Services
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Library</a></li>
-              <li><a href="#">Hostel</a></li>
-              <li><a href="#">Transport</a></li>
-            </ul>
-          </div>
+            <div class="nav-item">
+              <button type="button" class="nav-link dropdown-toggle">
+                Student Services
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Library</a></li>
+                <li><a href="#">Hostel</a></li>
+                <li><a href="#">Transport</a></li>
+              </ul>
+            </div>
 
-          <div class="nav-item">
-            <button type="button" class="nav-link dropdown-toggle">
-              Quick Links
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Result</a></li>
-              <li><a href="#">Time Table</a></li>
-              <li><a href="#">Syllabus</a></li>
-            </ul>
-          </div>
-        </nav>
+            <div class="nav-item">
+              <button type="button" class="nav-link dropdown-toggle">
+                Quick Links
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Result</a></li>
+                <li><a href="#">Time Table</a></li>
+                <li><a href="#">Syllabus</a></li>
+              </ul>
+            </div>
+          </nav>
 
-        <a href="#" class="v-connect-btn">V-Connect</a>
-      </div>
-    </header>
-
-    <div class="parallax-wrapper">
-      <section class="parallax-section" id="parallaxSection">
-        <div class="parallax-card" id="parallaxCard">
-          <!-- Layer 1: Sky Background (Depth 1) -->
-          <div class="layer layer-sky" id="layerSky"></div>
-
-          <!-- Layer 2: Title (Sandwiched 3D Typography) -->
-          <h1 class="parallax-title" id="parallaxTitle" data-text="DAMODAR">
-            DAMODAR
-          </h1>
-
-          <!-- Layer 3: Building Midground (Depth 2) -->
-          <div class="layer layer-building-back" id="layerBuildingBack"></div>
-
-          <!-- Glare / Lighting Effect -->
-          <div class="parallax-glare" id="parallaxGlare"></div>
+          <a href="#" class="v-connect-btn">V-Connect</a>
         </div>
-      </section>
-    </div>
+      </header>
 
-    <section class="popup-section">
+      <div class="parallax-wrapper">
+        <div class="parallax-section" id="parallaxSection">
+          <div class="parallax-card" id="parallaxCard">
+            <!-- Layer 1: Sky Background (Depth 1) -->
+            <div class="layer layer-sky" id="layerSky"></div>
+
+            <!-- Layer 2: Title (Sandwiched 3D Typography) -->
+            <h1 class="parallax-title" id="parallaxTitle" data-text="DAMODAR">
+              DAMODAR
+            </h1>
+
+            <!-- Layer 3: Building Midground (Depth 2) -->
+            <div class="layer layer-building-back" id="layerBuildingBack"></div>
+
+            <!-- Glare / Lighting Effect -->
+            <div class="parallax-glare" id="parallaxGlare"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: About / Popup Polaroid Section -->
+    <section class="snap-section popup-section" id="aboutSection">
       <div class="popup-inner">
         <div class="popup-text">
           <h2 class="popup-heading">
@@ -141,7 +145,8 @@
       </div>
     </section>
 
-    <section class="dotgrid-section">
+    <!-- Section 3: Dotgrid / What Shapes Us Section -->
+    <section class="snap-section dotgrid-section" id="shapesSection">
       <div class="dotgrid-inner">
         <h2 class="dotgrid-heading">
           <span class="hl-green">w</span>hat <span class="hl-red">s</span>hapes
@@ -177,8 +182,9 @@
       </div>
     </section>
 
-    <!-- GSAP for smooth text & motion animations -->
+    <!-- GSAP & ScrollTrigger for smooth text & section scroll animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <!-- Custom script -->
     <script src="../js/script.js"></script>

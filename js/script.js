@@ -324,70 +324,273 @@ const PARALLAX_CONFIG = {
   }
 
   // =========================================================================
-  // 📸 POLAROID GALLERY — Masonry Cascade Reveal on Scroll
+  // 📜 PAGE SECTION SLIDING & SCROLL REVEALS (GSAP + ScrollTrigger)
   // =========================================================================
-  function initPopupGalleryReveal() {
+  function initPageSectionSliding() {
+    if (typeof gsap === "undefined") return;
+
+    if (typeof ScrollTrigger !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
+    // 1. Hero Parallax Card Subtle Depth Transition on Scroll
+    const heroSection = document.getElementById("parallaxSection");
+    if (heroSection && typeof ScrollTrigger !== "undefined") {
+      gsap.to("#parallaxCard", {
+        scrollTrigger: {
+          trigger: ".parallax-wrapper",
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.8,
+        },
+        y: 40,
+        scale: 0.96,
+        opacity: 0.88,
+        ease: "none",
+      });
+    }
+
+    // 2. Section 2: About / Popup Section Sliding Reveal
     const popupSection = document.querySelector(".popup-section");
-    if (!popupSection) return;
+    if (popupSection) {
+      const textElements = popupSection.querySelectorAll(
+        ".popup-heading, .popup-copy, .read-more-btn",
+      );
+      const photoSlots = popupSection.querySelectorAll(".photo-slot");
 
-    const textElements = popupSection.querySelectorAll(
-      ".popup-heading, .popup-copy, .read-more-btn",
-    );
-    const photoSlots = popupSection.querySelectorAll(".photo-slot");
+      if (typeof ScrollTrigger !== "undefined") {
+        const popupTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: popupSection,
+            start: "top 78%",
+            toggleActions: "play none none none",
+          },
+        });
 
-    let hasAnimated = false;
+        popupTl
+          .from(textElements, {
+            opacity: 0,
+            y: 40,
+            duration: 0.8,
+            stagger: 0.12,
+            ease: "power3.out",
+            clearProps: "all",
+          })
+          .from(
+            photoSlots,
+            {
+              opacity: 0,
+              y: 100,
+              scale: 0.82,
+              duration: 0.9,
+              stagger: { amount: 0.45, from: "random" },
+              ease: "back.out(1.3)",
+              clearProps: "all",
+            },
+            "-=0.45",
+          );
+      } else {
+        // Fallback with IntersectionObserver
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                observer.disconnect();
+                gsap.from(textElements, {
+                  opacity: 0,
+                  y: 40,
+                  duration: 0.8,
+                  stagger: 0.12,
+                  ease: "power3.out",
+                  clearProps: "all",
+                });
+                gsap.from(photoSlots, {
+                  opacity: 0,
+                  y: 100,
+                  scale: 0.82,
+                  duration: 0.9,
+                  stagger: { amount: 0.45, from: "random" },
+                  ease: "back.out(1.3)",
+                  clearProps: "all",
+                });
+              }
+            });
+          },
+          { threshold: 0.15 },
+        );
+        observer.observe(popupSection);
+      }
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            hasAnimated = true;
-            observer.disconnect();
+    // 3. Section 3: Dotgrid ("What Shapes Us") Section Sliding Reveal
+    const dotgridSection = document.querySelector(".dotgrid-section");
+    if (dotgridSection) {
+      const heading = dotgridSection.querySelector(".dotgrid-heading");
+      const notes = dotgridSection.querySelectorAll(".sticky-note");
 
-            if (typeof gsap !== "undefined") {
-              const tl = gsap.timeline();
+      if (typeof ScrollTrigger !== "undefined") {
+        const dotgridTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: dotgridSection,
+            start: "top 78%",
+            toggleActions: "play none none none",
+          },
+        });
 
-              // 1. Text elements fade up
-              tl.from(textElements, {
-                opacity: 0,
-                y: 35,
-                duration: 0.75,
-                stagger: 0.12,
-                ease: "power3.out",
-                clearProps: "all",
-              });
-
-              // 2. Masonry Cascade polaroids reveal
-              tl.from(
-                photoSlots,
-                {
+        dotgridTl
+          .from(heading, {
+            opacity: 0,
+            y: 45,
+            duration: 0.85,
+            ease: "power3.out",
+            clearProps: "opacity,transform",
+          })
+          .from(
+            notes,
+            {
+              opacity: 0,
+              y: 90,
+              scale: 0.8,
+              duration: 0.85,
+              stagger: 0.16,
+              ease: "back.out(1.4)",
+              clearProps: "opacity,transform",
+            },
+            "-=0.45",
+          );
+      } else {
+        // Fallback with IntersectionObserver
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                observer.disconnect();
+                gsap.from(heading, {
+                  opacity: 0,
+                  y: 45,
+                  duration: 0.85,
+                  ease: "power3.out",
+                  clearProps: "opacity,transform",
+                });
+                gsap.from(notes, {
                   opacity: 0,
                   y: 90,
                   scale: 0.8,
                   duration: 0.85,
-                  stagger: { amount: 0.5, from: "random" },
+                  stagger: 0.16,
                   ease: "back.out(1.4)",
-                  clearProps: "all",
-                },
-                "-=0.4",
-              );
-            } else {
-              // Fallback
-              photoSlots.forEach((slot) => {
-                slot.style.opacity = "1";
-              });
-            }
-          }
-        });
-      },
-      { threshold: 0.15 },
-    );
-
-    observer.observe(popupSection);
+                  clearProps: "opacity,transform",
+                });
+              }
+            });
+          },
+          { threshold: 0.15 },
+        );
+        observer.observe(dotgridSection);
+      }
+    }
   }
 
-  // Run entrance animations
+  // =========================================================================
+  // 📑 ONE-SCROLL SECTION PAGINATION (Small Scroll -> Next Section)
+  // =========================================================================
+  function initSectionPagination() {
+    const sections = Array.from(document.querySelectorAll(".snap-section"));
+    if (sections.length === 0) return;
+
+    let isScrolling = false;
+
+    function getClosestSectionIndex() {
+      const scrollY = window.scrollY;
+      let closestIdx = 0;
+      let minDiff = Infinity;
+      sections.forEach((sec, idx) => {
+        const diff = Math.abs(sec.offsetTop - scrollY);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = idx;
+        }
+      });
+      return closestIdx;
+    }
+
+    function goToSection(index) {
+      if (index < 0 || index >= sections.length) return;
+      isScrolling = true;
+      sections[index].scrollIntoView({ behavior: "smooth" });
+
+      setTimeout(() => {
+        isScrolling = false;
+      }, 650);
+    }
+
+    // Wheel event: small scroll gesture triggers smooth jump to next/prev section
+    window.addEventListener(
+      "wheel",
+      (e) => {
+        if (isScrolling) {
+          e.preventDefault();
+          return;
+        }
+
+        if (Math.abs(e.deltaY) > 20) {
+          e.preventDefault();
+          const currentIndex = getClosestSectionIndex();
+          if (e.deltaY > 0) {
+            goToSection(currentIndex + 1);
+          } else {
+            goToSection(currentIndex - 1);
+          }
+        }
+      },
+      { passive: false },
+    );
+
+    // Keyboard navigation (Arrow keys / PageUp / PageDown)
+    window.addEventListener("keydown", (e) => {
+      if (["ArrowDown", "PageDown", "Space"].includes(e.code)) {
+        e.preventDefault();
+        const currentIndex = getClosestSectionIndex();
+        goToSection(currentIndex + 1);
+      } else if (["ArrowUp", "PageUp"].includes(e.code)) {
+        e.preventDefault();
+        const currentIndex = getClosestSectionIndex();
+        goToSection(currentIndex - 1);
+      }
+    });
+
+    // Touch swipe navigation for mobile
+    let touchStartY = 0;
+    window.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartY = e.touches[0].clientY;
+      },
+      { passive: true },
+    );
+
+    window.addEventListener(
+      "touchend",
+      (e) => {
+        if (isScrolling) return;
+        const touchEndY = e.changedTouches[0].clientY;
+        const diffY = touchStartY - touchEndY;
+        if (Math.abs(diffY) > 40) {
+          const currentIndex = getClosestSectionIndex();
+          if (diffY > 0) {
+            goToSection(currentIndex + 1);
+          } else {
+            goToSection(currentIndex - 1);
+          }
+        }
+      },
+      { passive: true },
+    );
+  }
+
+  // Run animations
   initNavbarEntrance();
   initTitleEntrance();
-  initPopupGalleryReveal();
+  initPageSectionSliding();
+  initSectionPagination();
 })();
