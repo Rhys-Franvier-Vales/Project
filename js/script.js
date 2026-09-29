@@ -594,3 +594,26 @@ const PARALLAX_CONFIG = {
   initPageSectionSliding();
   initSectionPagination();
 })();
+
+  // =========================================================================
+  // 🎓 FACULTY TABS — swap active course + panel color
+  // =========================================================================
+  const facultyTabs = document.querySelectorAll(".faculty-tab");
+  const facultyPanel = document.getElementById("facultyPanel");
+  const facultyContents = document.querySelectorAll(".faculty-content");
+
+  facultyTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      facultyTabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const targetKey = tab.dataset.tab;
+      facultyContents.forEach((content) => {
+        content.classList.toggle("active", content.dataset.content === targetKey);
+      });
+
+      if (facultyPanel) {
+        facultyPanel.style.setProperty("--panel-color", tab.dataset.color);
+      }
+    });
+  });
