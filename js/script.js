@@ -323,7 +323,71 @@ const PARALLAX_CONFIG = {
     }
   }
 
+  // =========================================================================
+  // 📸 POLAROID GALLERY — Masonry Cascade Reveal on Scroll
+  // =========================================================================
+  function initPopupGalleryReveal() {
+    const popupSection = document.querySelector(".popup-section");
+    if (!popupSection) return;
+
+    const textElements = popupSection.querySelectorAll(
+      ".popup-heading, .popup-copy, .read-more-btn",
+    );
+    const photoSlots = popupSection.querySelectorAll(".photo-slot");
+
+    let hasAnimated = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            hasAnimated = true;
+            observer.disconnect();
+
+            if (typeof gsap !== "undefined") {
+              const tl = gsap.timeline();
+
+              // 1. Text elements fade up
+              tl.from(textElements, {
+                opacity: 0,
+                y: 35,
+                duration: 0.75,
+                stagger: 0.12,
+                ease: "power3.out",
+                clearProps: "all",
+              });
+
+              // 2. Masonry Cascade polaroids reveal
+              tl.from(
+                photoSlots,
+                {
+                  opacity: 0,
+                  y: 90,
+                  scale: 0.8,
+                  duration: 0.85,
+                  stagger: { amount: 0.5, from: "random" },
+                  ease: "back.out(1.4)",
+                  clearProps: "all",
+                },
+                "-=0.4",
+              );
+            } else {
+              // Fallback
+              photoSlots.forEach((slot) => {
+                slot.style.opacity = "1";
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.15 },
+    );
+
+    observer.observe(popupSection);
+  }
+
   // Run entrance animations
   initNavbarEntrance();
   initTitleEntrance();
+  initPopupGalleryReveal();
 })();

@@ -220,9 +220,7 @@ body {
   border-radius: var(--parallax-radius);
   overflow: hidden;
   transform-style: preserve-3d;
-  box-shadow:
-    0 35px 80px -15px rgba(0, 0, 0, 0.7),
-    0 0 40px rgba(79, 70, 229, 0.15);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.22);
   background: #0a0a12;
   cursor: pointer;
   will-change: transform;
@@ -230,9 +228,7 @@ body {
 }
 
 .parallax-section:hover {
-  box-shadow:
-    0 45px 100px -15px rgba(0, 0, 0, 0.85),
-    0 0 60px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 18px 40px -8px rgba(0, 0, 0, 0.32);
 }
 
 /* Inner 3D stage that tilts */
@@ -411,8 +407,9 @@ body {
   width: 100%;
   background: #ffffff;
   color: #000;
-  padding: 90px 6% 60px;
-  overflow: hidden;
+  padding: 70px 6% 0;
+  position: relative;
+  overflow: hidden; /* Cleanly cuts off lower portion at resting baseline */
 }
 
 .popup-inner {
@@ -453,53 +450,55 @@ body {
   box-shadow: 0 8px 18px rgba(253, 200, 0, 0.45);
 }
 
-/* Peekaboo polaroid gallery */
+/* Peekaboo polaroid gallery — Only top headers peeking out at rest */
 .popup-gallery {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-top: 60px;
-  padding-top: 40px;
-  padding-bottom: 20px;
+  margin-top: 10px;
+  padding-top: 230px; /* Generous headroom for full hover pop-up */
+  margin-bottom: -290px; /* Sinks cards deep into the bottom line */
 }
 
 .photo-slot {
   position: relative;
-  width: min(290px, 22vw);
-  height: 290px;
-  margin: 0 -2.2%;
+  width: min(340px, 26vw);
+  height: 450px;
+  margin: 0 -3.2%;
   z-index: 2;
+  transition: z-index 0.2s;
 }
 
 .photo-slot.is-wide {
-  width: min(380px, 28vw);
+  width: min(440px, 34vw);
 }
 
 .photo-slot:hover {
-  z-index: 25;
+  z-index: 35;
 }
 
 .popup-photo {
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 460px;
   background: #ffffff;
-  padding: 12px 12px 30px;
-  border-radius: 6px;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.08);
-  transform: translateY(65px) rotate(var(--rot, 0deg));
-  transition: transform 0.45s cubic-bezier(0.2, 1, 0.3, 1), box-shadow 0.45s ease;
+  padding: 14px 14px 44px;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.06);
+  transform: translateY(0) rotate(var(--rot, 0deg));
+  transition: transform 0.5s cubic-bezier(0.18, 1, 0.32, 1), box-shadow 0.5s ease;
   cursor: pointer;
   will-change: transform;
 }
 
 .photo-slot.is-wide .popup-photo {
-  height: 310px;
+  height: 380px;
 }
 
+/* Hover State: Pops way up, straightens, and elevates */
 .photo-slot:hover .popup-photo {
-  transform: translateY(-45px) rotate(0deg) scale(1.08);
-  box-shadow: 0 30px 65px rgba(0, 0, 0, 0.28), 0 8px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-220px) rotate(0deg) scale(1.06);
+  box-shadow: 0 38px 80px rgba(0, 0, 0, 0.32), 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
 .popup-photo img {
@@ -507,65 +506,71 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
-  border-radius: 3px;
+  border-radius: 4px;
   pointer-events: none;
 }
 
 @media (max-width: 900px) {
+  .popup-gallery {
+    padding-top: 170px;
+    margin-bottom: -220px;
+  }
+
   .photo-slot {
-    width: min(220px, 35vw);
-    height: 220px;
-    margin: 0 -3.5%;
+    width: min(260px, 36vw);
+    height: 350px;
+    margin: 0 -4%;
   }
 
   .photo-slot.is-wide {
-    width: min(280px, 44vw);
+    width: min(340px, 46vw);
   }
 
   .popup-photo {
-    height: 280px;
-    transform: translateY(50px) rotate(var(--rot, 0deg));
+    height: 350px;
+    padding: 10px 10px 32px;
   }
 
   .photo-slot.is-wide .popup-photo {
-    height: 230px;
+    height: 290px;
   }
 
   .photo-slot:hover .popup-photo {
-    transform: translateY(-30px) rotate(0deg) scale(1.06);
+    transform: translateY(-160px) rotate(0deg) scale(1.05);
   }
 }
 
 @media (max-width: 600px) {
   .popup-section {
-    padding: 60px 6% 40px;
+    padding: 50px 6% 0;
   }
 
   .popup-gallery {
-    margin-top: 30px;
+    margin-top: 10px;
+    padding-top: 120px;
+    margin-bottom: -160px;
   }
 
   .photo-slot {
-    width: min(150px, 45vw);
-    height: 160px;
-    margin: 0 -5%;
+    width: min(180px, 48vw);
+    height: 250px;
+    margin: 0 -5.5%;
   }
 
   .photo-slot.is-wide {
-    width: min(190px, 56vw);
+    width: min(230px, 58vw);
   }
 
   .popup-photo {
-    height: 200px;
-    padding: 8px 8px 20px;
-    transform: translateY(35px) rotate(var(--rot, 0deg));
+    height: 250px;
+    padding: 8px 8px 24px;
   }
 
   .photo-slot.is-wide .popup-photo {
-    height: 160px;
+    height: 210px;
   }
 
   .photo-slot:hover .popup-photo {
-    transform: translateY(-20px) rotate(0deg) scale(1.05);
+    transform: translateY(-110px) rotate(0deg) scale(1.04);
   }
 }
