@@ -856,15 +856,15 @@ body {
   font-weight: 500;
   color: #000;
   background: var(--tab-color, #e3e3e3);
-  padding: 16px 30px 22px;
-  clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+  width: 220px;
+  text-align: center;
+  white-space: normal;
+  line-height: 1.2;
+  padding: 16px 14px 22px;
+  clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
   margin-right: -16px;
   position: relative;
   transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.faculty-tab:first-child {
-  clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%);
 }
 
 .faculty-tab:hover {
@@ -947,8 +947,9 @@ body {
 
 @media (max-width: 900px) {
   .faculty-tab {
-    font-size: 14px;
-    padding: 12px 20px 16px;
+    width: 150px;
+    font-size: 13px;
+    padding: 12px 10px 16px;
   }
 
   .faculty-panel {
