@@ -422,42 +422,86 @@ const PARALLAX_CONFIG = {
       }
     }
 
-    // 3. Section 3: Dotgrid ("What Shapes Us") Section Sliding Reveal
+    // 3. Section 3: Dotgrid ("What Shapes Us") Section & Sticky Notes Card Reveal (CodeGrid style)
     const dotgridSection = document.querySelector(".dotgrid-section");
     if (dotgridSection) {
       const heading = dotgridSection.querySelector(".dotgrid-heading");
-      const notes = dotgridSection.querySelectorAll(".sticky-note");
+      const noteVision = dotgridSection.querySelector(".note-vision");
+      const noteAcademics = dotgridSection.querySelector(".note-academics");
+      const noteMission = dotgridSection.querySelector(".note-mission");
+
+      const animateCards = (tl) => {
+        if (heading) {
+          tl.from(heading, {
+            opacity: 0,
+            y: 40,
+            duration: 0.75,
+            ease: "power3.out",
+            clearProps: "opacity,transform",
+          });
+        }
+
+        if (noteVision) {
+          tl.from(
+            noteVision,
+            {
+              opacity: 0,
+              x: 80,
+              y: 100,
+              scale: 0.7,
+              rotation: 6,
+              duration: 0.9,
+              ease: "back.out(1.3)",
+              clearProps: "opacity,transform",
+            },
+            "-=0.4",
+          );
+        }
+
+        if (noteAcademics) {
+          tl.from(
+            noteAcademics,
+            {
+              opacity: 0,
+              x: -80,
+              y: 90,
+              scale: 0.7,
+              rotation: -8,
+              duration: 0.9,
+              ease: "back.out(1.35)",
+              clearProps: "opacity,transform",
+            },
+            "-=0.72",
+          );
+        }
+
+        if (noteMission) {
+          tl.from(
+            noteMission,
+            {
+              opacity: 0,
+              x: 0,
+              y: 120,
+              scale: 0.7,
+              rotation: 4,
+              duration: 0.95,
+              ease: "back.out(1.25)",
+              clearProps: "opacity,transform",
+            },
+            "-=0.72",
+          );
+        }
+      };
 
       if (typeof ScrollTrigger !== "undefined") {
-        const dotgridTl = gsap.timeline({
+        const shapesTl = gsap.timeline({
           scrollTrigger: {
             trigger: dotgridSection,
             start: "top 78%",
             toggleActions: "play none none none",
           },
         });
-
-        dotgridTl
-          .from(heading, {
-            opacity: 0,
-            y: 45,
-            duration: 0.85,
-            ease: "power3.out",
-            clearProps: "opacity,transform",
-          })
-          .from(
-            notes,
-            {
-              opacity: 0,
-              y: 90,
-              scale: 0.8,
-              duration: 0.85,
-              stagger: 0.16,
-              ease: "back.out(1.4)",
-              clearProps: "opacity,transform",
-            },
-            "-=0.45",
-          );
+        animateCards(shapesTl);
       } else {
         // Fallback with IntersectionObserver
         const observer = new IntersectionObserver(
@@ -465,22 +509,8 @@ const PARALLAX_CONFIG = {
             entries.forEach((entry) => {
               if (entry.isIntersecting) {
                 observer.disconnect();
-                gsap.from(heading, {
-                  opacity: 0,
-                  y: 45,
-                  duration: 0.85,
-                  ease: "power3.out",
-                  clearProps: "opacity,transform",
-                });
-                gsap.from(notes, {
-                  opacity: 0,
-                  y: 90,
-                  scale: 0.8,
-                  duration: 0.85,
-                  stagger: 0.16,
-                  ease: "back.out(1.4)",
-                  clearProps: "opacity,transform",
-                });
+                const shapesTl = gsap.timeline();
+                animateCards(shapesTl);
               }
             });
           },
