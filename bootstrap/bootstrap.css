@@ -1182,3 +1182,113 @@ body {
     border-radius: 6px 6px 0 0;
   }
 }
+
+/* ============ FOOTER / GET IN TOUCH SECTION ============ */
+.footer-section {
+  width: 100%;
+  background: #fff;
+  padding: 90px 6% 100px;
+  overflow: hidden;
+}
+
+.footer-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+.footer-heading {
+  font-family: "Funnel Display", "Krona One", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 7vw, 6.5rem);
+  color: #000;
+  margin: 0 0 24px;
+}
+
+.footer-divider {
+  border: none;
+  border-top: 1px solid #000;
+  margin: 0 0 36px;
+}
+
+.footer-contact-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 70px;
+}
+
+.footer-contact-title {
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  margin: 0 0 4px;
+  color: #000;
+}
+
+.footer-contact-text {
+  font-family: "Funnel Display", sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #000;
+  margin: 0;
+}
+
+.footer-capsules {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  padding: 30px 0 10px;
+}
+
+.capsule {
+  width: 260px;
+  height: 76px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(-260px) rotate(calc(var(--rot) * 2.4));
+  transition:
+    transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.4s ease;
+}
+
+.footer-capsules.in-view .capsule {
+  opacity: 1;
+  transform: translateY(0) rotate(var(--rot));
+}
+
+.footer-capsules .capsule:nth-child(1) { transition-delay: 0s; }
+.footer-capsules .capsule:nth-child(2) { transition-delay: 0.08s; }
+.footer-capsules .capsule:nth-child(3) { transition-delay: 0.16s; }
+.footer-capsules .capsule:nth-child(4) { transition-delay: 0.24s; }
+.footer-capsules .capsule:nth-child(5) { transition-delay: 0.32s; }
+.footer-capsules .capsule:nth-child(6) { transition-delay: 0.4s; }
+
+.capsule img {
+  max-width: 82%;
+  max-height: 62%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.capsule-youtube { background: #ec0146; }
+.capsule-linkedin { background: #005498; }
+.capsule-threads { background: #000000; }
+.capsule-grey { background: #d9d9d9; }
+
+@media (max-width: 600px) {
+  .footer-section {
+    padding: 60px 6% 60px;
+  }
+  .capsule {
+    width: 200px;
+    height: 60px;
+  }
+}
