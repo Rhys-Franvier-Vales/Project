@@ -1025,6 +1025,26 @@ const PARALLAX_CONFIG = {
   initPageSectionSliding();
   initSectionPagination();
   initDotgrid3DParallax();
+
+    // =========================================================================
+  // 📬 FOOTER CAPSULES — fall-in entry animation on scroll into view
+  // =========================================================================
+  const footerCapsules = document.querySelector(".footer-capsules");
+
+  if (footerCapsules && "IntersectionObserver" in window) {
+    const capsuleObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            footerCapsules.classList.add("in-view");
+            capsuleObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+    capsuleObserver.observe(footerCapsules);
+  }
 })();
 
 // =========================================================================
