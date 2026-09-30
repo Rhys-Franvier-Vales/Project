@@ -1027,24 +1027,243 @@ const PARALLAX_CONFIG = {
   initDotgrid3DParallax();
 
     // =========================================================================
-  // 📬 FOOTER CAPSULES — fall-in entry animation on scroll into view
   // =========================================================================
-  const footerCapsules = document.querySelector(".footer-capsules");
+  // ⚛️ MATTER.JS 2D PHYSICS ENGINE FOR FOOTER CAPSULES
+  // =========================================================================
+  function initMatterPhysicsCapsules() {
+    const container = document.querySelector(".footer-capsules");
+    const footerSec = document.getElementById("footerSection");
+    if (!container || typeof Matter === "undefined") return;
 
-  if (footerCapsules && "IntersectionObserver" in window) {
-    const capsuleObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            footerCapsules.classList.add("in-view");
-            capsuleObserver.unobserve(entry.target);
+    const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
+
+    let engine, runner, floor, leftWall, rightWall, ceiling, pairs = [];
+    let isInitialized = false;
+    let isDragging = false;
+    let dragStartPos = { x: 0, y: 0 };
+
+    function setupWorld() {
+      if (isInitialized) return;
+      isInitialized = true;
+
+      const width = container.clientWidth || window.innerWidth;
+      const height = container.clientHeight || 320;
+
+      engine = Engine.create({
+        gravity: { x: 0, y: 1.2, scale: 0.0012 }
+      });
+
+      // Bounding box walls - floor aligned directly with the bottom end of the page
+      floor = Bodies.rectangle(width / 2, height + 15, width * 3, 30, {
+        isStatic: true,
+        restitution: 0.82,
+        friction: 0.15
+      });
+
+      leftWall = Bodies.rectangle(-20, height / 2, 40, height * 4, {
+        isStatic: true,
+        restitution: 0.7
+      });
+
+      rightWall = Bodies.rectangle(width + 20, height / 2, 40, height * 4, {
+        isStatic: true,
+        restitution: 0.7
+      });
+
+      // Ceiling is placed high above during drop so it never blocks falling capsules
+      ceiling = Bodies.rectangle(width / 2, -800, width * 3, 40, {
+        isStatic: true,
+        restitution: 0.7
+      });
+
+      Composite.add(engine.world, [floor, leftWall, rightWall, ceiling]);
+
+      // Measure and create rigid bodies for each DOM capsule
+      const capsuleEls = container.querySelectorAll(".capsule");
+      const total = capsuleEls.length;
+      pairs = [];
+
+      capsuleEls.forEach((el, index) => {
+        const rect = el.getBoundingClientRect();
+        const w = rect.width || (el.classList.contains("capsule-circle") ? 60 : el.classList.contains("capsule-sm") ? 130 : 240);
+        const h = rect.height || (el.classList.contains("capsule-circle") ? 60 : el.classList.contains("capsule-sm") ? 56 : 72);
+
+        // Calculate staggered drop positions
+        const xOffset = (width * 0.1) + (index / total) * (width * 0.8) + (Math.random() - 0.5) * 30;
+        const yOffset = -50 - (index * 40) - (Math.random() * 50);
+        const parsedRot = parseFloat(el.style.getPropertyValue("--rot")) || (Math.random() * 40 - 20);
+        const startAngle = (parsedRot * Math.PI) / 180;
+
+        let body;
+        if (el.classList.contains("capsule-circle")) {
+          body = Bodies.circle(xOffset, yOffset, w / 2, {
+            restitution: 0.88,
+            friction: 0.05,
+            frictionAir: 0.01,
+            density: 0.002
+          });
+        } else {
+          body = Bodies.rectangle(xOffset, yOffset, w, h, {
+            chamfer: { radius: h / 2 },
+            restitution: 0.82,
+            friction: 0.1,
+            frictionAir: 0.01,
+            density: 0.002
+          });
+        }
+
+        Matter.Body.setAngle(body, startAngle);
+        Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.08);
+
+        Composite.add(engine.world, body);
+        pairs.push({ el, body, w, h, seed: Math.random() * 100, index });
+
+        // Set immediate initial position so they are visible
+        el.style.transform = `translate3d(${xOffset - w / 2}px, ${yOffset - h / 2}px, 0px) rotate(${parsedRot}deg)`;
+        el.style.opacity = "1";
+        el.style.visibility = "visible";
+      });
+
+      // State tracking for bounce-to-float transition
+      let isFloating = false;
+      let floatingStartTime = 0;
+
+      // Transition to Zero-Gravity Floating after first bounce
+      setTimeout(() => {
+        isFloating = true;
+        floatingStartTime = Date.now();
+        engine.gravity.y = 0;
+        engine.gravity.scale = 0.0001;
+
+        // Bring ceiling down to top boundary to contain floating bodies
+        Matter.Body.setPosition(ceiling, { x: width / 2, y: -15 });
+
+        // Increase air damping so capsules float smoothly
+        pairs.forEach(({ body }) => {
+          body.frictionAir = 0.032;
+          body.restitution = 0.75;
+          // Apply a gentle buoyant bounce nudge
+          Matter.Body.applyForce(body, body.position, {
+            x: (Math.random() - 0.5) * 0.004,
+            y: -0.006 - Math.random() * 0.004
+          });
+        });
+      }, 1600);
+
+      // Mouse and Touch Interaction
+      const mouse = Mouse.create(container);
+      const mouseConstraint = MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+          stiffness: 0.2,
+          render: { visible: false }
+        }
+      });
+
+      Composite.add(engine.world, mouseConstraint);
+
+      // Prevent link navigation if user dragged capsule
+      Events.on(mouseConstraint, "startdrag", (e) => {
+        isDragging = false;
+        dragStartPos = { x: e.mouse.position.x, y: e.mouse.position.y };
+      });
+
+      Events.on(mouseConstraint, "mousemove", (e) => {
+        if (mouseConstraint.body) {
+          const dist = Math.hypot(e.mouse.position.x - dragStartPos.x, e.mouse.position.y - dragStartPos.y);
+          if (dist > 6) isDragging = true;
+        }
+      });
+
+      container.querySelectorAll("a.capsule").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          if (isDragging) {
+            e.preventDefault();
+            e.stopPropagation();
           }
         });
-      },
-      { threshold: 0.25 }
-    );
-    capsuleObserver.observe(footerCapsules);
+      });
+
+      // Physics loop
+      Events.on(engine, "beforeUpdate", () => {
+        if (!isFloating) return;
+
+        const time = (Date.now() - floatingStartTime) * 0.0015;
+
+        // Apply organic zero-g micro-drift forces to each floating capsule
+        pairs.forEach(({ body, seed, index }) => {
+          // Subtle harmonic wave motion
+          const fx = Math.sin(time * 1.2 + seed) * 0.00014;
+          const fy = Math.cos(time * 0.9 + seed + index) * 0.00012;
+          const spin = Math.sin(time * 0.7 + seed) * 0.00003;
+
+          Matter.Body.applyForce(body, body.position, { x: fx, y: fy });
+          Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.98 + spin);
+
+          // Soft buoyant repelling boundaries to keep capsules near the bottom end of page
+          const padBottom = 25;
+          const padTop = 30;
+          const padSides = 30;
+
+          if (body.position.y > height - padBottom) {
+            Matter.Body.applyForce(body, body.position, { x: 0, y: -0.0014 });
+          } else if (body.position.y < padTop) {
+            Matter.Body.applyForce(body, body.position, { x: 0, y: 0.0012 });
+          }
+
+          if (body.position.x > width - padSides) {
+            Matter.Body.applyForce(body, body.position, { x: -0.0012, y: 0 });
+          } else if (body.position.x < padSides) {
+            Matter.Body.applyForce(body, body.position, { x: 0.0012, y: 0 });
+          }
+        });
+      });
+
+      // Sync Matter body coordinates to DOM styles
+      Events.on(engine, "afterUpdate", () => {
+        pairs.forEach(({ el, body, w, h }) => {
+          const posX = (body.position.x - w / 2).toFixed(2);
+          const posY = (body.position.y - h / 2).toFixed(2);
+          const deg = (body.angle * (180 / Math.PI)).toFixed(2);
+          el.style.transform = `translate3d(${posX}px, ${posY}px, 0px) rotate(${deg}deg)`;
+        });
+      });
+
+      runner = Runner.create();
+      Runner.run(runner, engine);
+    }
+
+    // Initialize physics
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setupWorld();
+              observer.disconnect();
+            }
+          });
+        },
+        { threshold: 0.05, rootMargin: "100px" }
+      );
+      observer.observe(footerSec || container);
+    } else {
+      setupWorld();
+    }
+
+    // Resize handling to keep walls matched to container
+    window.addEventListener("resize", () => {
+      if (!isInitialized || !engine) return;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || 320;
+
+      Matter.Body.setPosition(floor, { x: w / 2, y: h + 15 });
+      Matter.Body.setPosition(leftWall, { x: -20, y: h / 2 });
+      Matter.Body.setPosition(rightWall, { x: w + 20, y: h / 2 });
+    });
   }
+
+  initMatterPhysicsCapsules();
 })();
 
 // =========================================================================
