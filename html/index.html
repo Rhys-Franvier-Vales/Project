@@ -11,7 +11,15 @@
       rel="stylesheet"
     />
 
-    <!-- Custom styles (includes local Krona One font) -->
+    <!-- Google Fonts: Funnel Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Custom styles (includes local fonts) -->
     <link href="../bootstrap/bootstrap.css" rel="stylesheet" />
   </head>
 
@@ -105,7 +113,8 @@
       <div class="popup-inner">
         <div class="popup-text">
           <h2 class="popup-heading">
-            Shree Damodar College Of<br />Commerce &amp; Economics
+            <span class="reveal-line"><span class="reveal-inner">Shree Damodar College Of</span></span>
+            <span class="reveal-line"><span class="reveal-inner">Commerce &amp; Economics</span></span>
           </h2>
           <p class="popup-copy">
             Established in 1973, Vidya Vikas Mandal's Shree Damodar College of
@@ -183,7 +192,7 @@
       </div>
     </section>
 
-    <section class="snap-section faculty-section">
+    <section class="snap-section faculty-section" id="facultySection">
       <div class="faculty-inner">
         <h2 class="faculty-heading">Explore Our Courses</h2>
 
@@ -195,16 +204,16 @@
           >
             HOME
           </button>
-          <button class="faculty-tab" data-tab="bcavoc" data-color="#a18cff">
+          <button class="faculty-tab" data-tab="bcavoc" data-color="#9d88ff">
             B.CA &amp; B.VOC
           </button>
-          <button class="faculty-tab" data-tab="bcom" data-color="#f7ff81">
+          <button class="faculty-tab" data-tab="bcom" data-color="#fbfd74">
             B.COM
           </button>
-          <button class="faculty-tab" data-tab="bba" data-color="#00cc3e">
+          <button class="faculty-tab" data-tab="bba" data-color="#54fc7e">
             B.BA/B.BA(FS)
           </button>
-          <button class="faculty-tab" data-tab="mcom" data-color="#ff4d50">
+          <button class="faculty-tab" data-tab="mcom" data-color="#ff6b70">
             M.COM
           </button>
         </div>
@@ -216,9 +225,9 @@
         >
           <div class="faculty-content active" data-content="home">
             <div class="faculty-home-grid">
-              <div class="faculty-home-text">
+              <div class="faculty-home-left">
                 <h3 class="faculty-subheading">
-                  Your <span class="highlight-pink">Academic</span><br />
+                  Your <span class="highlight-pink-box"><span class="pin-handle pin-tl"></span>Academic<span class="pin-handle pin-br"></span></span><br />
                   Journey Starts Here
                 </h3>
                 <div class="faculty-illustration">
@@ -228,11 +237,13 @@
                   />
                 </div>
               </div>
-              <div class="faculty-cards">
-                <div class="faculty-card"></div>
-                <div class="faculty-card"></div>
-                <div class="faculty-card"></div>
-                <div class="faculty-card"></div>
+              <div class="faculty-home-right">
+                <div class="faculty-cards">
+                  <div class="faculty-card"></div>
+                  <div class="faculty-card"></div>
+                  <div class="faculty-card"></div>
+                  <div class="faculty-card"></div>
+                </div>
               </div>
             </div>
           </div>

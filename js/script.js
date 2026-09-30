@@ -31,6 +31,10 @@ const PARALLAX_CONFIG = {
 };
 
 (function () {
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
   const section = document.getElementById("parallaxSection");
   const card = document.getElementById("parallaxCard");
   const glare = document.getElementById("parallaxGlare");
@@ -213,7 +217,7 @@ const PARALLAX_CONFIG = {
   });
 
   // =========================================================================
-  // ✨ TITLE ENTRANCE ANIMATION — Quick letter-by-letter slide & fade up
+  // ✨ TITLE ENTRANCE ANIMATION — Smooth, elegant letter-by-letter slide & fade up
   // =========================================================================
   function initTitleEntrance() {
     if (!title) return;
@@ -232,19 +236,19 @@ const PARALLAX_CONFIG = {
 
     if (typeof gsap !== "undefined") {
       gsap.from(charElements, {
-        y: 60,
+        y: 65,
         opacity: 0,
-        duration: 0.85,
-        stagger: 0.05, // Quick, crisp sequential reveal
+        duration: 1.2,
+        stagger: 0.08, // Graceful sequential letter reveal
         ease: "power3.out",
-        delay: 0.15,
+        delay: 0.2,
       });
     } else {
       // CSS Fallback animation
       charElements.forEach((span, idx) => {
         span.style.opacity = "0";
-        span.style.transform = "translateY(60px)";
-        span.style.transition = `transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) ${0.15 + idx * 0.05}s, opacity 0.85s ease ${0.15 + idx * 0.05}s`;
+        span.style.transform = "translateY(65px)";
+        span.style.transition = `transform 1.15s cubic-bezier(0.16, 1, 0.3, 1) ${0.2 + idx * 0.08}s, opacity 1.15s ease ${0.2 + idx * 0.08}s`;
       });
       requestAnimationFrame(() => {
         charElements.forEach((span) => {
@@ -256,7 +260,7 @@ const PARALLAX_CONFIG = {
   }
 
   // =========================================================================
-  // 🚀 NAVBAR ENTRANCE ANIMATION — Smooth sequential fade-down
+  // 🚀 NAVBAR ENTRANCE ANIMATION — Smooth, graceful sequential fade-down
   // =========================================================================
   function initNavbarEntrance() {
     const siteLogo = document.querySelector(".site-logo");
@@ -271,7 +275,7 @@ const PARALLAX_CONFIG = {
         y: -35,
         opacity: 0,
         scale: 0.92,
-        duration: 0.85,
+        duration: 1.1,
         clearProps: "transform,opacity,scale",
       })
         .from(
@@ -279,31 +283,31 @@ const PARALLAX_CONFIG = {
           {
             y: -25,
             opacity: 0,
-            duration: 0.75,
+            duration: 1.0,
             clearProps: "transform,opacity",
           },
-          "-=0.6",
+          "-=0.75",
         )
         .from(
           navItems,
           {
             y: -18,
             opacity: 0,
-            duration: 0.55,
-            stagger: 0.05, // Quick, snappy word-by-word fade down
+            duration: 0.8,
+            stagger: 0.08, // Smooth word-by-word fade down
             clearProps: "transform,opacity",
           },
-          "-=0.5",
+          "-=0.65",
         )
         .from(
           vConnectBtn,
           {
             y: -25,
             opacity: 0,
-            duration: 0.75,
+            duration: 1.0,
             clearProps: "transform,opacity",
           },
-          "-=0.6",
+          "-=0.75",
         );
     } else {
       // CSS Fallback
@@ -311,7 +315,7 @@ const PARALLAX_CONFIG = {
         if (!el) return;
         el.style.opacity = "0";
         el.style.transform = "translateY(-30px)";
-        el.style.transition = `transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.08}s, opacity 0.75s ease ${i * 0.08}s`;
+        el.style.transition = `transform 1.0s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.1}s, opacity 1.0s ease ${i * 0.1}s`;
       });
       requestAnimationFrame(() => {
         [siteLogo, siteNav, vConnectBtn].forEach((el) => {
@@ -350,76 +354,128 @@ const PARALLAX_CONFIG = {
       });
     }
 
-    // 2. Section 2: About / Popup Section Sliding Reveal
+    // 2. Section 2: About / Popup Section Kinetic Reveal
     const popupSection = document.querySelector(".popup-section");
     if (popupSection) {
-      const textElements = popupSection.querySelectorAll(
-        ".popup-heading, .popup-copy, .read-more-btn",
-      );
+      const headingInners = popupSection.querySelectorAll(".reveal-inner");
+      const copy = popupSection.querySelector(".popup-copy");
+      const readMoreBtn = popupSection.querySelector(".read-more-btn");
       const photoSlots = popupSection.querySelectorAll(".photo-slot");
 
-      if (typeof ScrollTrigger !== "undefined") {
-        const popupTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: popupSection,
-            start: "top 78%",
-            toggleActions: "play none none none",
-          },
-        });
+      let hasPlayed = false;
 
-        popupTl
-          .from(textElements, {
-            opacity: 0,
-            y: 40,
-            duration: 0.8,
-            stagger: 0.12,
-            ease: "power3.out",
-            clearProps: "all",
-          })
-          .from(
-            photoSlots,
+      function playAboutReveal() {
+        if (hasPlayed) return;
+        hasPlayed = true;
+
+        const tl = gsap.timeline();
+
+        // 1. Kinetic Masked Line Reveal for Heading
+        if (headingInners.length > 0) {
+          tl.fromTo(
+            headingInners,
+            { y: "125%", rotateZ: 3.5, opacity: 0 },
             {
-              opacity: 0,
-              y: 100,
-              scale: 0.82,
-              duration: 0.9,
-              stagger: { amount: 0.45, from: "random" },
-              ease: "back.out(1.3)",
+              y: "0%",
+              rotateZ: 0,
+              opacity: 1,
+              duration: 1.15,
+              stagger: 0.15,
+              ease: "power4.out",
+              clearProps: "transform,opacity",
+            },
+          );
+        } else {
+          tl.fromTo(
+            popupSection.querySelector(".popup-heading"),
+            { y: 55, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1.05,
+              ease: "power4.out",
               clearProps: "all",
             },
-            "-=0.45",
           );
-      } else {
-        // Fallback with IntersectionObserver
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                observer.disconnect();
-                gsap.from(textElements, {
-                  opacity: 0,
-                  y: 40,
-                  duration: 0.8,
-                  stagger: 0.12,
-                  ease: "power3.out",
-                  clearProps: "all",
-                });
-                gsap.from(photoSlots, {
-                  opacity: 0,
-                  y: 100,
-                  scale: 0.82,
-                  duration: 0.9,
-                  stagger: { amount: 0.45, from: "random" },
-                  ease: "back.out(1.3)",
-                  clearProps: "all",
-                });
-              }
-            });
-          },
-          { threshold: 0.15 },
-        );
-        observer.observe(popupSection);
+        }
+
+        // 2. Luxurious Blur + Slide-up for Body Copy
+        if (copy) {
+          tl.fromTo(
+            copy,
+            { y: 45, opacity: 0, filter: "blur(10px)" },
+            {
+              y: 0,
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 1.0,
+              ease: "power3.out",
+              clearProps: "all",
+            },
+            "-=0.8",
+          );
+        }
+
+        // 3. Elastic Pop for "Read More" Action Button
+        if (readMoreBtn) {
+          tl.fromTo(
+            readMoreBtn,
+            { y: 30, opacity: 0, scale: 0.85 },
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 0.85,
+              ease: "back.out(1.6)",
+              clearProps: "all",
+            },
+            "-=0.65",
+          );
+        }
+
+        // 4. Staggered Dynamic Polaroid Fan-out Entrance
+        if (photoSlots.length > 0) {
+          tl.fromTo(
+            photoSlots,
+            { opacity: 0, y: 130, scale: 0.82 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 1.05,
+              stagger: { amount: 0.45, from: "start" },
+              ease: "back.out(1.25)",
+              clearProps: "all",
+            },
+            "-=0.7",
+          );
+        }
       }
+
+      window.aboutSectionActions = {
+        playReveal: playAboutReveal,
+      };
+
+      if (typeof ScrollTrigger !== "undefined") {
+        ScrollTrigger.create({
+          trigger: popupSection,
+          start: "top 78%",
+          onEnter: () => playAboutReveal(),
+        });
+      }
+
+      // Robust IntersectionObserver
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              playAboutReveal();
+            }
+          });
+        },
+        { threshold: 1 },
+      );
+      observer.observe(popupSection);
     }
 
     // 3. Section 3: Dotgrid ("What Shapes Us") Notes (Ultra-Smooth Aerodynamic Flight)
@@ -431,25 +487,50 @@ const PARALLAX_CONFIG = {
       const noteMission = dotgridSection.querySelector(".note-mission");
       const notes = [noteVision, noteAcademics, noteMission].filter(Boolean);
 
-      // Initial offscreen state before entering
-      gsap.set(notes, {
-        willChange: "transform, opacity",
-        x: "125vw",
-        opacity: 0,
-        force3D: true,
-      });
-      if (heading) gsap.set(heading, { opacity: 0, y: 35 });
+      let isRevealed = false;
+
+      function showRestingState() {
+        isRevealed = true;
+        gsap.killTweensOf([heading, ...notes]);
+        if (heading) gsap.set(heading, { opacity: 1, y: 0 });
+        if (noteVision)
+          gsap.set(noteVision, {
+            x: 0,
+            y: 0,
+            rotation: -3.5,
+            scale: 1,
+            opacity: 1,
+            force3D: true,
+          });
+        if (noteAcademics)
+          gsap.set(noteAcademics, {
+            x: 0,
+            y: 0,
+            rotation: 12.5,
+            scale: 1,
+            opacity: 1,
+            force3D: true,
+          });
+        if (noteMission)
+          gsap.set(noteMission, {
+            x: 0,
+            y: 0,
+            rotation: -1.5,
+            scale: 1,
+            opacity: 1,
+            force3D: true,
+          });
+      }
 
       function flyInFromRight() {
-        gsap.killTweensOf([heading, ...notes, dotgridSection]);
-
-        gsap.to(dotgridSection, { "--dot-opacity": 1, duration: 0.9, ease: "power2.out" });
+        isRevealed = true;
+        gsap.killTweensOf([heading, ...notes]);
 
         if (heading) {
           gsap.fromTo(
             heading,
             { opacity: 0, y: 35 },
-            { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+            { opacity: 1, y: 0, duration: 1.15, ease: "power3.out" },
           );
         }
 
@@ -463,9 +544,9 @@ const PARALLAX_CONFIG = {
               rotation: -3.5,
               scale: 1,
               opacity: 1,
-              duration: 1.15,
+              duration: 1.4,
               ease: "power4.out",
-              delay: 0.04,
+              delay: 0.06,
               force3D: true,
             },
           );
@@ -481,9 +562,9 @@ const PARALLAX_CONFIG = {
               rotation: 12.5,
               scale: 1,
               opacity: 1,
-              duration: 1.18,
+              duration: 1.45,
               ease: "power4.out",
-              delay: 0.12,
+              delay: 0.16,
               force3D: true,
             },
           );
@@ -499,9 +580,9 @@ const PARALLAX_CONFIG = {
               rotation: -1.5,
               scale: 1,
               opacity: 1,
-              duration: 1.22,
+              duration: 1.5,
               ease: "power4.out",
-              delay: 0.2,
+              delay: 0.26,
               force3D: true,
             },
           );
@@ -509,12 +590,11 @@ const PARALLAX_CONFIG = {
       }
 
       function flyAwayToLeft() {
-        gsap.killTweensOf([heading, ...notes, dotgridSection]);
-
-        gsap.to(dotgridSection, { "--dot-opacity": 0, duration: 0.6, ease: "power2.in" });
+        isRevealed = false;
+        gsap.killTweensOf([heading, ...notes]);
 
         if (heading) {
-          gsap.to(heading, { opacity: 0, y: -25, duration: 0.5, ease: "power2.inOut" });
+          gsap.to(heading, { opacity: 0, y: -25, duration: 0.65, ease: "power2.inOut" });
         }
 
         if (noteVision) {
@@ -524,7 +604,7 @@ const PARALLAX_CONFIG = {
             rotation: -22,
             scale: 0.9,
             opacity: 0,
-            duration: 0.75,
+            duration: 0.95,
             ease: "power3.inOut",
             force3D: true,
           });
@@ -537,8 +617,8 @@ const PARALLAX_CONFIG = {
             rotation: 18,
             scale: 0.9,
             opacity: 0,
-            duration: 0.78,
-            delay: 0.06,
+            duration: 1.0,
+            delay: 0.08,
             ease: "power3.inOut",
             force3D: true,
           });
@@ -551,8 +631,8 @@ const PARALLAX_CONFIG = {
             rotation: -18,
             scale: 0.9,
             opacity: 0,
-            duration: 0.82,
-            delay: 0.12,
+            duration: 1.05,
+            delay: 0.16,
             ease: "power3.inOut",
             force3D: true,
           });
@@ -560,15 +640,14 @@ const PARALLAX_CONFIG = {
       }
 
       function flyInFromLeft() {
-        gsap.killTweensOf([heading, ...notes, dotgridSection]);
-
-        gsap.to(dotgridSection, { "--dot-opacity": 1, duration: 0.9, ease: "power2.out" });
+        isRevealed = true;
+        gsap.killTweensOf([heading, ...notes]);
 
         if (heading) {
           gsap.fromTo(
             heading,
             { opacity: 0, y: -30 },
-            { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+            { opacity: 1, y: 0, duration: 1.15, ease: "power3.out" },
           );
         }
 
@@ -582,9 +661,9 @@ const PARALLAX_CONFIG = {
               rotation: -3.5,
               scale: 1,
               opacity: 1,
-              duration: 1.15,
+              duration: 1.4,
               ease: "power4.out",
-              delay: 0.04,
+              delay: 0.06,
               force3D: true,
             },
           );
@@ -600,9 +679,9 @@ const PARALLAX_CONFIG = {
               rotation: 12.5,
               scale: 1,
               opacity: 1,
-              duration: 1.18,
+              duration: 1.45,
               ease: "power4.out",
-              delay: 0.12,
+              delay: 0.16,
               force3D: true,
             },
           );
@@ -618,9 +697,9 @@ const PARALLAX_CONFIG = {
               rotation: -1.5,
               scale: 1,
               opacity: 1,
-              duration: 1.22,
+              duration: 1.5,
               ease: "power4.out",
-              delay: 0.2,
+              delay: 0.26,
               force3D: true,
             },
           );
@@ -628,12 +707,11 @@ const PARALLAX_CONFIG = {
       }
 
       function flyAwayToRight() {
-        gsap.killTweensOf([heading, ...notes, dotgridSection]);
-
-        gsap.to(dotgridSection, { "--dot-opacity": 0, duration: 0.6, ease: "power2.in" });
+        isRevealed = false;
+        gsap.killTweensOf([heading, ...notes]);
 
         if (heading) {
-          gsap.to(heading, { opacity: 0, y: 35, duration: 0.5, ease: "power2.inOut" });
+          gsap.to(heading, { opacity: 0, y: 35, duration: 0.65, ease: "power2.inOut" });
         }
 
         if (noteVision) {
@@ -643,7 +721,7 @@ const PARALLAX_CONFIG = {
             rotation: 18,
             scale: 0.9,
             opacity: 0,
-            duration: 0.75,
+            duration: 0.95,
             ease: "power3.inOut",
             force3D: true,
           });
@@ -656,8 +734,8 @@ const PARALLAX_CONFIG = {
             rotation: -14,
             scale: 0.9,
             opacity: 0,
-            duration: 0.78,
-            delay: 0.06,
+            duration: 1.0,
+            delay: 0.08,
             ease: "power3.inOut",
             force3D: true,
           });
@@ -670,52 +748,53 @@ const PARALLAX_CONFIG = {
             rotation: 16,
             scale: 0.9,
             opacity: 0,
-            duration: 0.82,
-            delay: 0.12,
+            duration: 1.05,
+            delay: 0.16,
             ease: "power3.inOut",
             force3D: true,
           });
         }
       }
 
-      if (typeof ScrollTrigger !== "undefined") {
-        ScrollTrigger.create({
-          trigger: dotgridSection,
-          start: "top 60%",
-          end: "bottom 40%",
-          onEnter: () => {
-            gsap.to("body", { backgroundColor: "#020202", duration: 0.75, ease: "power2.out" });
-            flyInFromRight();
-          },
-          onLeave: () => {
-            gsap.to("body", { backgroundColor: "#ffffff", duration: 0.7, ease: "power2.inOut" });
-            flyAwayToLeft();
-          },
-          onEnterBack: () => {
-            gsap.to("body", { backgroundColor: "#020202", duration: 0.75, ease: "power2.out" });
-            flyInFromLeft();
-          },
-          onLeaveBack: () => {
-            gsap.to("body", { backgroundColor: "#ffffff", duration: 0.7, ease: "power2.inOut" });
-            flyAwayToRight();
-          },
-        });
-      } else {
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                gsap.to("body", { backgroundColor: "#020202", duration: 0.75 });
-                flyInFromRight();
-              } else {
-                gsap.to("body", { backgroundColor: "#ffffff", duration: 0.7 });
+      let lastScrollY = window.scrollY;
+
+      // Expose actions for section pagination orchestration
+      window.shapesSectionActions = {
+        flyInFromRight,
+        flyAwayToLeft,
+        flyInFromLeft,
+        flyAwayToRight,
+        isRevealed: () => isRevealed,
+      };
+
+      // Robust IntersectionObserver that reliably handles page loads & directional in-view checks
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const currentScrollY = window.scrollY;
+            if (entry.isIntersecting) {
+              if (!isRevealed) {
+                // If coming upwards from Faculty section below
+                if (currentScrollY > dotgridSection.offsetTop) {
+                  flyInFromLeft();
+                } else {
+                  flyInFromRight();
+                }
               }
-            });
-          },
-          { threshold: 0.2 },
-        );
-        observer.observe(dotgridSection);
-      }
+            } else {
+              if (entry.boundingClientRect.top < 0) {
+                flyAwayToLeft();
+              } else {
+                flyAwayToRight();
+              }
+            }
+            lastScrollY = currentScrollY;
+          });
+        },
+        { threshold: 0.3 },
+      );
+
+      observer.observe(dotgridSection);
     }
   }
 
@@ -746,21 +825,63 @@ const PARALLAX_CONFIG = {
       if (index < 0 || index >= sections.length) return;
       isScrolling = true;
 
-      // Smooth theme color transition for Section 3 (Dotgrid)
-      const dotgridSection = document.querySelector(".dotgrid-section");
-      if (sections[index] && sections[index].classList.contains("dotgrid-section")) {
-        gsap.to("body", { backgroundColor: "#020202", duration: 0.8, ease: "power2.out" });
-        if (dotgridSection) gsap.to(dotgridSection, { "--dot-opacity": 1, duration: 0.9, ease: "power2.out" });
-      } else {
-        gsap.to("body", { backgroundColor: "#ffffff", duration: 0.75, ease: "power2.inOut" });
-        if (dotgridSection) gsap.to(dotgridSection, { "--dot-opacity": 0, duration: 0.6, ease: "power2.inOut" });
+      const currentIndex = getClosestSectionIndex();
+      const currentSec = sections[currentIndex];
+      const targetSec = sections[index];
+
+      // 1. If leaving Dotgrid section, allow notes to fly away first before scrolling
+      if (
+        currentSec &&
+        currentSec.classList.contains("dotgrid-section") &&
+        window.shapesSectionActions
+      ) {
+        if (index > currentIndex) {
+          window.shapesSectionActions.flyAwayToLeft();
+        } else {
+          window.shapesSectionActions.flyAwayToRight();
+        }
+
+        setTimeout(() => {
+          targetSec.scrollIntoView({ behavior: "smooth" });
+          if (targetSec.id === "aboutSection" && window.aboutSectionActions) {
+            window.aboutSectionActions.playReveal();
+          }
+          setTimeout(() => {
+            isScrolling = false;
+          }, 800);
+        }, 280);
+        return;
       }
 
-      sections[index].scrollIntoView({ behavior: "smooth" });
+      // 2. If entering Dotgrid section from above or below, trigger directional flight
+      if (
+        targetSec &&
+        targetSec.classList.contains("dotgrid-section") &&
+        window.shapesSectionActions
+      ) {
+        if (currentIndex > index) {
+          // Coming from Faculty below -> fly in from left to center
+          window.shapesSectionActions.flyInFromLeft();
+        } else {
+          // Coming from About above -> fly in from right to center
+          window.shapesSectionActions.flyInFromRight();
+        }
+      }
+
+      // 3. If entering About section, trigger kinetic reveal
+      if (
+        targetSec &&
+        targetSec.id === "aboutSection" &&
+        window.aboutSectionActions
+      ) {
+        window.aboutSectionActions.playReveal();
+      }
+
+      targetSec.scrollIntoView({ behavior: "smooth" });
 
       setTimeout(() => {
         isScrolling = false;
-      }, 650);
+      }, 750);
     }
 
     // Wheel event: 1 small scroll gesture jumps to next/prev section instantly
@@ -874,22 +995,22 @@ const PARALLAX_CONFIG = {
 
     function animate() {
       // Butter-smooth lerping
-      currentX += (targetX - currentX) * 0.07;
-      currentY += (targetY - currentY) * 0.07;
+      currentX += (targetX - currentX) * 0.06;
+      currentY += (targetY - currentY) * 0.06;
 
-      // Deep background grid moves in opposition with 3D tilt
-      const bgMoveX = (-currentX * 34).toFixed(2);
-      const bgMoveY = (-currentY * 26).toFixed(2);
-      const rotY = (currentX * 4.5).toFixed(2);
-      const rotX = (-currentY * 3.5).toFixed(2);
+      // Subtle, refined background grid 3D movement
+      const bgMoveX = (-currentX * 16).toFixed(2);
+      const bgMoveY = (-currentY * 12).toFixed(2);
+      const rotY = (currentX * 1.8).toFixed(2);
+      const rotX = (-currentY * 1.4).toFixed(2);
 
-      bg.style.transform = `translate3d(${bgMoveX}px, ${bgMoveY}px, -45px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.06)`;
+      bg.style.transform = `translate3d(${bgMoveX}px, ${bgMoveY}px, -20px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.03)`;
 
-      // Foreground content has subtle forward parallax
+      // Subtle foreground content counter-parallax
       if (inner) {
-        const fgMoveX = (currentX * 14).toFixed(2);
-        const fgMoveY = (currentY * 10).toFixed(2);
-        inner.style.transform = `translate3d(${fgMoveX}px, ${fgMoveY}px, 20px)`;
+        const fgMoveX = (currentX * 6).toFixed(2);
+        const fgMoveY = (currentY * 4).toFixed(2);
+        inner.style.transform = `translate3d(${fgMoveX}px, ${fgMoveY}px, 10px)`;
       }
 
       requestAnimationFrame(animate);
