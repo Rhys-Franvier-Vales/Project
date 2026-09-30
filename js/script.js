@@ -1049,3 +1049,26 @@ facultyTabs.forEach((tab) => {
     }
   });
 });
+
+// =========================================================================
+// 🎯 HIGHLIGHT BOX SELECTION ANIMATION (Scroll-Triggered)
+// =========================================================================
+const highlightPinkBox = document.querySelector(".highlight-pink-box");
+const facultySection = document.getElementById("facultySection");
+
+if (facultySection && "IntersectionObserver" in window) {
+  const selectObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          facultySection.classList.add("is-in-view");
+        } else {
+          facultySection.classList.remove("is-in-view");
+        }
+      });
+    },
+    { threshold: 0.25 }
+  );
+
+  selectObserver.observe(facultySection);
+}
