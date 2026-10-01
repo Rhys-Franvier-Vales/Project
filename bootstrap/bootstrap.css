@@ -482,6 +482,40 @@ body {
   }
 }
 
+/* ============ HORIZONTAL SPATIAL STAGE ============ */
+.horizontal-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.horizontal-stage .popup-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  z-index: 1;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.horizontal-stage .dotgrid-section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  z-index: 2;
+  transform: translate3d(100%, 0, 0);
+  will-change: transform;
+  box-shadow: -6px 0 20px rgba(0, 0, 0, 0.14);
+}
+
 /* ============ POP-UP / ABOUT SECTION ============ */
 .popup-section {
   width: 100%;
@@ -553,6 +587,8 @@ body {
   /* Generous headroom for full hover pop-up */
   margin-bottom: -290px;
   /* Sinks cards deep into the bottom line */
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 .photo-slot {
@@ -562,6 +598,8 @@ body {
   margin: 0 -3.2%;
   z-index: 2;
   transition: z-index 0.2s;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
 }
 
 .photo-slot.is-wide {
@@ -720,16 +758,26 @@ body {
   margin: 0 0 45px;
 }
 
+.dotgrid-heading .hl-green,
+.dotgrid-heading .hl-red,
+.dotgrid-heading .hl-yellow {
+  display: inline-block;
+  transition: text-shadow 0.4s ease, transform 0.3s ease;
+}
+
 .dotgrid-heading .hl-green {
   color: #9cfc76;
+  text-shadow: 0 0 24px rgba(156, 252, 118, 0.55);
 }
 
 .dotgrid-heading .hl-red {
   color: #ff7c7e;
+  text-shadow: 0 0 24px rgba(255, 124, 126, 0.55);
 }
 
 .dotgrid-heading .hl-yellow {
   color: #fbfd7b;
+  text-shadow: 0 0 24px rgba(251, 253, 123, 0.55);
 }
 
 /* Triangle / Collage Sticky Notes Layout */
@@ -1381,6 +1429,8 @@ body {
   touch-action: none;
   will-change: transform;
   transform-origin: center center;
+  opacity: 0;
+  visibility: hidden;
 }
 
 .capsule:active {

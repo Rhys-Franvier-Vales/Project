@@ -354,7 +354,7 @@ const PARALLAX_CONFIG = {
       });
     }
 
-    // 2. Section 2: About / Popup Section Kinetic Reveal
+    // 2. Section 2: About / Popup Section Kinetic Reveal & Awwwards 3D Transitions
     const popupSection = document.querySelector(".popup-section");
     if (popupSection) {
       const headingInners = popupSection.querySelectorAll(".reveal-inner");
@@ -362,15 +362,16 @@ const PARALLAX_CONFIG = {
       const readMoreBtn = popupSection.querySelector(".read-more-btn");
       const photoSlots = popupSection.querySelectorAll(".photo-slot");
 
-      let hasPlayed = false;
-
       function playAboutReveal() {
-        if (hasPlayed) return;
-        hasPlayed = true;
-
+        gsap.killTweensOf([headingInners, copy, readMoreBtn, photoSlots, popupSection.querySelector(".popup-text")]);
         const tl = gsap.timeline();
 
-        // 1. Kinetic Masked Line Reveal for Heading
+        // 0. Reset any popup-text transforms
+        if (popupSection.querySelector(".popup-text")) {
+          gsap.set(popupSection.querySelector(".popup-text"), { y: 0, opacity: 1 });
+        }
+
+        // 1. Kinetic Masked Line Reveal for Heading (Snappy & Crisp)
         if (headingInners.length > 0) {
           tl.fromTo(
             headingInners,
@@ -379,8 +380,8 @@ const PARALLAX_CONFIG = {
               y: "0%",
               rotateZ: 0,
               opacity: 1,
-              duration: 1.15,
-              stagger: 0.15,
+              duration: 0.75,
+              stagger: 0.08,
               ease: "power4.out",
               clearProps: "transform,opacity",
             },
@@ -388,31 +389,30 @@ const PARALLAX_CONFIG = {
         } else {
           tl.fromTo(
             popupSection.querySelector(".popup-heading"),
-            { y: 55, opacity: 0 },
+            { y: 45, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              duration: 1.05,
+              duration: 0.75,
               ease: "power4.out",
               clearProps: "all",
             },
           );
         }
 
-        // 2. Luxurious Blur + Slide-up for Body Copy
+        // 2. Crisp Slide-up for Body Copy
         if (copy) {
           tl.fromTo(
             copy,
-            { y: 45, opacity: 0, filter: "blur(10px)" },
+            { y: 35, opacity: 0 },
             {
               y: 0,
               opacity: 1,
-              filter: "blur(0px)",
-              duration: 1.0,
+              duration: 0.7,
               ease: "power3.out",
               clearProps: "all",
             },
-            "-=0.8",
+            "-=0.55",
           );
         }
 
@@ -420,40 +420,78 @@ const PARALLAX_CONFIG = {
         if (readMoreBtn) {
           tl.fromTo(
             readMoreBtn,
-            { y: 30, opacity: 0, scale: 0.85 },
+            { y: 25, opacity: 0, scale: 0.88 },
             {
               y: 0,
               opacity: 1,
               scale: 1,
-              duration: 0.85,
+              duration: 0.65,
               ease: "back.out(1.6)",
               clearProps: "all",
             },
-            "-=0.65",
+            "-=0.5",
           );
         }
 
-        // 4. Staggered Dynamic Polaroid Fan-out Entrance
+        // 4. Staggered Dynamic 3D Polaroid Fan-out Landing (Snappier & Punchy)
         if (photoSlots.length > 0) {
-          tl.fromTo(
-            photoSlots,
-            { opacity: 0, y: 130, scale: 0.82 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 1.05,
-              stagger: { amount: 0.45, from: "start" },
-              ease: "back.out(1.25)",
-              clearProps: "all",
-            },
-            "-=0.7",
-          );
+          photoSlots.forEach((slot, i) => {
+            const rotOffset = [-8, 6, -5, 9][i] || 0;
+            tl.fromTo(
+              slot,
+              { opacity: 0, y: 160, x: 0, rotation: rotOffset, scale: 0.85, force3D: true },
+              {
+                opacity: 1,
+                y: 0,
+                x: 0,
+                rotation: 0,
+                scale: 1,
+                duration: 0.85,
+                ease: "back.out(1.4)",
+                force3D: true,
+                clearProps: "transform,opacity",
+              },
+              i === 0 ? "-=0.55" : "-=0.72"
+            );
+          });
+        }
+      }
+
+      function onDotgridSlideIn() {
+        gsap.to(popupSection.querySelector(".popup-gallery"), {
+          x: "-10%",
+          opacity: 0.65,
+          duration: 1.15,
+          ease: "power3.inOut"
+        });
+      }
+
+      function onDotgridSlideOut() {
+        gsap.to(popupSection.querySelector(".popup-gallery"), {
+          x: "0%",
+          opacity: 1,
+          duration: 1.05,
+          ease: "power3.out",
+          clearProps: "transform,opacity",
+        });
+        if (popupSection.querySelector(".popup-text")) {
+          gsap.set(popupSection.querySelector(".popup-text"), { clearProps: "all" });
+        }
+        if (headingInners && headingInners.length > 0) {
+          gsap.set(headingInners, { clearProps: "transform,opacity" });
+        }
+        if (copy) {
+          gsap.set(copy, { clearProps: "all" });
+        }
+        if (readMoreBtn) {
+          gsap.set(readMoreBtn, { clearProps: "all" });
         }
       }
 
       window.aboutSectionActions = {
         playReveal: playAboutReveal,
+        onDotgridSlideIn: onDotgridSlideIn,
+        onDotgridSlideOut: onDotgridSlideOut,
       };
 
       if (typeof ScrollTrigger !== "undefined") {
@@ -473,14 +511,15 @@ const PARALLAX_CONFIG = {
             }
           });
         },
-        { threshold: 1 },
+        { threshold: 0.6 },
       );
       observer.observe(popupSection);
     }
 
-    // 3. Section 3: Dotgrid ("What Shapes Us") Notes (Ultra-Smooth Aerodynamic Flight)
+    // 3. Section 3: Dotgrid ("What Shapes Us") Notes (Lateral Spatial Sweep & Aerodynamic Flight)
     const dotgridSection = document.querySelector(".dotgrid-section");
     if (dotgridSection) {
+      const inner = dotgridSection.querySelector(".dotgrid-inner");
       const heading = dotgridSection.querySelector(".dotgrid-heading");
       const noteVision = dotgridSection.querySelector(".note-vision");
       const noteAcademics = dotgridSection.querySelector(".note-academics");
@@ -491,13 +530,15 @@ const PARALLAX_CONFIG = {
 
       function showRestingState() {
         isRevealed = true;
-        gsap.killTweensOf([heading, ...notes]);
-        if (heading) gsap.set(heading, { opacity: 1, y: 0 });
+        gsap.killTweensOf([inner, heading, ...notes]);
+        if (inner) gsap.set(inner, { x: 0, opacity: 1 });
+        if (heading) gsap.set(heading, { opacity: 1, x: 0, y: 0 });
         if (noteVision)
           gsap.set(noteVision, {
             x: 0,
             y: 0,
             rotation: -3.5,
+            rotateX: 0,
             scale: 1,
             opacity: 1,
             force3D: true,
@@ -507,6 +548,7 @@ const PARALLAX_CONFIG = {
             x: 0,
             y: 0,
             rotation: 12.5,
+            rotateX: 0,
             scale: 1,
             opacity: 1,
             force3D: true,
@@ -516,6 +558,7 @@ const PARALLAX_CONFIG = {
             x: 0,
             y: 0,
             rotation: -1.5,
+            rotateX: 0,
             scale: 1,
             opacity: 1,
             force3D: true,
@@ -524,29 +567,49 @@ const PARALLAX_CONFIG = {
 
       function flyInFromRight() {
         isRevealed = true;
-        gsap.killTweensOf([heading, ...notes]);
+        gsap.killTweensOf([inner, heading, ...notes]);
 
-        if (heading) {
+        // Lateral panel entry from the right
+        if (inner) {
           gsap.fromTo(
-            heading,
-            { opacity: 0, y: 35 },
-            { opacity: 1, y: 0, duration: 1.15, ease: "power3.out" },
+            inner,
+            { x: "50vw", opacity: 0 },
+            { x: 0, opacity: 1, duration: 1.2, ease: "power3.out", force3D: true }
           );
         }
 
+        // Kinetic Heading with Neon Accents
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, x: 60 },
+            { opacity: 1, x: 0, duration: 1.1, ease: "power3.out" },
+          );
+          const hlSpans = heading.querySelectorAll(".hl-green, .hl-red, .hl-yellow");
+          if (hlSpans.length > 0) {
+            gsap.fromTo(
+              hlSpans,
+              { scale: 0.75, opacity: 0 },
+              { scale: 1, opacity: 1, duration: 0.85, stagger: 0.12, ease: "back.out(2)", delay: 0.2 }
+            );
+          }
+        }
+
+        // Aerodynamic 3D Flight of Sticky Notes entering with the lateral sweep
         if (noteVision) {
           gsap.fromTo(
             noteVision,
-            { x: "115vw", y: 35, rotation: 18, scale: 0.88, opacity: 0 },
+            { x: "115vw", y: 35, rotation: 22, rotateX: 20, scale: 0.84, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: -3.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
-              duration: 1.4,
+              duration: 1.35,
               ease: "power4.out",
-              delay: 0.06,
+              delay: 0.08,
               force3D: true,
             },
           );
@@ -555,16 +618,17 @@ const PARALLAX_CONFIG = {
         if (noteAcademics) {
           gsap.fromTo(
             noteAcademics,
-            { x: "135vw", y: -25, rotation: -14, scale: 0.88, opacity: 0 },
+            { x: "135vw", y: -30, rotation: -18, rotateX: -20, scale: 0.84, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: 12.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
-              duration: 1.45,
+              duration: 1.4,
               ease: "power4.out",
-              delay: 0.16,
+              delay: 0.18,
               force3D: true,
             },
           );
@@ -573,16 +637,17 @@ const PARALLAX_CONFIG = {
         if (noteMission) {
           gsap.fromTo(
             noteMission,
-            { x: "155vw", y: 40, rotation: 16, scale: 0.88, opacity: 0 },
+            { x: "155vw", y: 45, rotation: 20, rotateX: 18, scale: 0.84, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: -1.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
-              duration: 1.5,
+              duration: 1.45,
               ease: "power4.out",
-              delay: 0.26,
+              delay: 0.28,
               force3D: true,
             },
           );
@@ -591,7 +656,7 @@ const PARALLAX_CONFIG = {
 
       function flyAwayToLeft() {
         isRevealed = false;
-        gsap.killTweensOf([heading, ...notes]);
+        gsap.killTweensOf([inner, heading, ...notes]);
 
         if (heading) {
           gsap.to(heading, { opacity: 0, y: -25, duration: 0.65, ease: "power2.inOut" });
@@ -602,6 +667,7 @@ const PARALLAX_CONFIG = {
             x: "-120vw",
             y: -30,
             rotation: -22,
+            rotateX: -15,
             scale: 0.9,
             opacity: 0,
             duration: 0.95,
@@ -615,6 +681,7 @@ const PARALLAX_CONFIG = {
             x: "-140vw",
             y: 25,
             rotation: 18,
+            rotateX: 15,
             scale: 0.9,
             opacity: 0,
             duration: 1.0,
@@ -629,6 +696,7 @@ const PARALLAX_CONFIG = {
             x: "-160vw",
             y: -20,
             rotation: -18,
+            rotateX: -15,
             scale: 0.9,
             opacity: 0,
             duration: 1.05,
@@ -641,7 +709,7 @@ const PARALLAX_CONFIG = {
 
       function flyInFromLeft() {
         isRevealed = true;
-        gsap.killTweensOf([heading, ...notes]);
+        gsap.killTweensOf([inner, heading, ...notes]);
 
         if (heading) {
           gsap.fromTo(
@@ -654,11 +722,12 @@ const PARALLAX_CONFIG = {
         if (noteVision) {
           gsap.fromTo(
             noteVision,
-            { x: "-120vw", y: -30, rotation: -22, scale: 0.88, opacity: 0 },
+            { x: "-120vw", y: -30, rotation: -22, rotateX: -20, scale: 0.88, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: -3.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
               duration: 1.4,
@@ -672,11 +741,12 @@ const PARALLAX_CONFIG = {
         if (noteAcademics) {
           gsap.fromTo(
             noteAcademics,
-            { x: "-140vw", y: 25, rotation: 18, scale: 0.88, opacity: 0 },
+            { x: "-140vw", y: 25, rotation: 18, rotateX: 20, scale: 0.88, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: 12.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
               duration: 1.45,
@@ -690,11 +760,12 @@ const PARALLAX_CONFIG = {
         if (noteMission) {
           gsap.fromTo(
             noteMission,
-            { x: "-160vw", y: -20, rotation: -18, scale: 0.88, opacity: 0 },
+            { x: "-160vw", y: -20, rotation: -18, rotateX: -18, scale: 0.88, opacity: 0 },
             {
               x: 0,
               y: 0,
               rotation: -1.5,
+              rotateX: 0,
               scale: 1,
               opacity: 1,
               duration: 1.5,
@@ -708,10 +779,15 @@ const PARALLAX_CONFIG = {
 
       function flyAwayToRight() {
         isRevealed = false;
-        gsap.killTweensOf([heading, ...notes]);
+        gsap.killTweensOf([inner, heading, ...notes]);
+
+        // Lateral panel exit to the right
+        if (inner) {
+          gsap.to(inner, { x: "55vw", opacity: 0, duration: 0.95, ease: "power3.inOut" });
+        }
 
         if (heading) {
-          gsap.to(heading, { opacity: 0, y: 35, duration: 0.65, ease: "power2.inOut" });
+          gsap.to(heading, { opacity: 0, x: 60, duration: 0.65, ease: "power2.inOut" });
         }
 
         if (noteVision) {
@@ -719,6 +795,7 @@ const PARALLAX_CONFIG = {
             x: "115vw",
             y: 35,
             rotation: 18,
+            rotateX: 18,
             scale: 0.9,
             opacity: 0,
             duration: 0.95,
@@ -732,6 +809,7 @@ const PARALLAX_CONFIG = {
             x: "135vw",
             y: -25,
             rotation: -14,
+            rotateX: -18,
             scale: 0.9,
             opacity: 0,
             duration: 1.0,
@@ -746,6 +824,7 @@ const PARALLAX_CONFIG = {
             x: "155vw",
             y: 40,
             rotation: 16,
+            rotateX: 16,
             scale: 0.9,
             opacity: 0,
             duration: 1.05,
@@ -766,140 +845,231 @@ const PARALLAX_CONFIG = {
         flyAwayToRight,
         isRevealed: () => isRevealed,
       };
-
-      // Robust IntersectionObserver that reliably handles page loads & directional in-view checks
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const currentScrollY = window.scrollY;
-            if (entry.isIntersecting) {
-              if (!isRevealed) {
-                // If coming upwards from Faculty section below
-                if (currentScrollY > dotgridSection.offsetTop) {
-                  flyInFromLeft();
-                } else {
-                  flyInFromRight();
-                }
-              }
-            } else {
-              if (entry.boundingClientRect.top < 0) {
-                flyAwayToLeft();
-              } else {
-                flyAwayToRight();
-              }
-            }
-            lastScrollY = currentScrollY;
-          });
-        },
-        { threshold: 0.3 },
-      );
-
-      observer.observe(dotgridSection);
     }
   }
 
   // =========================================================================
-  // 📑 ONE-SCROLL SECTION PAGINATION (Small Scroll -> Next Section)
+  // 📑 ONE-SCROLL SECTION & HORIZONTAL STAGE PAGINATION
   // =========================================================================
   function initSectionPagination() {
-    const sections = Array.from(document.querySelectorAll(".snap-section"));
-    if (sections.length === 0) return;
+    const heroSec = document.getElementById("parallaxSection") || document.querySelector(".parallax-section");
+    const horizontalStage = document.getElementById("horizontalStage");
+    const shapesSec = document.getElementById("shapesSection");
+    const facultySec = document.getElementById("facultySection");
+    const footerSec = document.getElementById("footerSection");
 
-    let isScrolling = false;
+    if (!horizontalStage || !shapesSec) return;
 
-    function getClosestSectionIndex() {
+    // 5 Visual Stages:
+    // 0: Hero
+    // 1: About (Polaroids Gallery)
+    // 2: Dotgrid ("What Shapes Us" - Horizontal Lateral Sweep Door)
+    // 3: Faculty
+    // 4: Footer
+    let currentStage = 0;
+    let isTransitioning = false;
+
+    // Determine current stage based on scroll position & dotgrid state
+    function getCurrentStage() {
       const scrollY = window.scrollY;
-      let closestIdx = 0;
-      let minDiff = Infinity;
-      sections.forEach((sec, idx) => {
-        const diff = Math.abs(sec.offsetTop - scrollY);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestIdx = idx;
+      const stageTop = horizontalStage.offsetTop;
+      const facultyTop = facultySec ? facultySec.offsetTop : Infinity;
+      const footerTop = footerSec ? footerSec.offsetTop : Infinity;
+
+      const tolerance = 120;
+
+      if (scrollY < stageTop - tolerance) {
+        return 0; // Hero
+      } else if (scrollY >= stageTop - tolerance && scrollY < facultyTop - tolerance) {
+        // We are on horizontal stage: check if dotgrid is slid in
+        const transform = window.getComputedStyle(shapesSec).transform;
+        if (transform && transform !== "none") {
+          const matrix = new DOMMatrixReadOnly(transform);
+          // If shapesSec is slid in (m41 near 0)
+          if (matrix.m41 < window.innerWidth * 0.4) {
+            return 2; // Dotgrid
+          }
         }
-      });
-      return closestIdx;
+        return 1; // About
+      } else if (scrollY >= facultyTop - tolerance && scrollY < footerTop - tolerance) {
+        return 3; // Faculty
+      } else {
+        return 4; // Footer
+      }
     }
 
-    function goToSection(index) {
-      if (index < 0 || index >= sections.length) return;
-      isScrolling = true;
+    currentStage = getCurrentStage();
 
-      const currentIndex = getClosestSectionIndex();
-      const currentSec = sections[currentIndex];
-      const targetSec = sections[index];
+    function goToStage(target) {
+      if (target < 0 || target > 4) return;
+      if (target === currentStage && !isTransitioning) return;
 
-      // 1. If leaving Dotgrid section, allow notes to fly away first before scrolling
-      if (
-        currentSec &&
-        currentSec.classList.contains("dotgrid-section") &&
-        window.shapesSectionActions
-      ) {
-        if (index > currentIndex) {
-          window.shapesSectionActions.flyAwayToLeft();
-        } else {
-          window.shapesSectionActions.flyAwayToRight();
-        }
+      isTransitioning = true;
+      const from = currentStage;
+      currentStage = target;
 
-        setTimeout(() => {
-          targetSec.scrollIntoView({ behavior: "smooth" });
-          if (targetSec.id === "aboutSection" && window.aboutSectionActions) {
-            window.aboutSectionActions.playReveal();
-          }
-          setTimeout(() => {
-            isScrolling = false;
-          }, 800);
-        }, 280);
+      // === 🚀 1 -> 2: LATERAL HORIZONTAL SWEEP (About -> Dotgrid) ===
+      if (from === 1 && target === 2) {
+        horizontalStage.scrollIntoView({ behavior: "auto" });
+
+        gsap.to(shapesSec, {
+          x: "0%",
+          duration: 1.15,
+          ease: "power3.inOut",
+          force3D: true,
+          onStart: () => {
+            if (window.aboutSectionActions && window.aboutSectionActions.onDotgridSlideIn) {
+              window.aboutSectionActions.onDotgridSlideIn();
+            }
+            if (window.shapesSectionActions && window.shapesSectionActions.flyInFromRight) {
+              window.shapesSectionActions.flyInFromRight();
+            }
+          },
+          onComplete: () => {
+            setTimeout(() => {
+              isTransitioning = false;
+            }, 180);
+          },
+        });
         return;
       }
 
-      // 2. If entering Dotgrid section from above or below, trigger directional flight
-      if (
-        targetSec &&
-        targetSec.classList.contains("dotgrid-section") &&
-        window.shapesSectionActions
-      ) {
-        if (currentIndex > index) {
-          // Coming from Faculty below -> fly in from left to center
-          window.shapesSectionActions.flyInFromLeft();
-        } else {
-          // Coming from About above -> fly in from right to center
-          window.shapesSectionActions.flyInFromRight();
+      // === 🚀 2 -> 1: SWEEP BACK REVEAL (Dotgrid -> About) ===
+      if (from === 2 && target === 1) {
+        horizontalStage.scrollIntoView({ behavior: "auto" });
+
+        gsap.to(shapesSec, {
+          x: "100%",
+          duration: 1.15,
+          ease: "power3.inOut",
+          force3D: true,
+          onStart: () => {
+            if (window.shapesSectionActions && window.shapesSectionActions.flyAwayToRight) {
+              window.shapesSectionActions.flyAwayToRight();
+            }
+            if (window.aboutSectionActions && window.aboutSectionActions.onDotgridSlideOut) {
+              window.aboutSectionActions.onDotgridSlideOut();
+            }
+          },
+          onComplete: () => {
+            setTimeout(() => {
+              isTransitioning = false;
+            }, 180);
+          },
+        });
+        return;
+      }
+
+      // === 0 -> 1: Hero to About ===
+      if (from === 0 && target === 1) {
+        gsap.set(shapesSec, { x: "100%" });
+        horizontalStage.scrollIntoView({ behavior: "smooth" });
+        if (window.aboutSectionActions && window.aboutSectionActions.playReveal) {
+          window.aboutSectionActions.playReveal();
         }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
       }
 
-      // 3. If entering About section, trigger kinetic reveal
-      if (
-        targetSec &&
-        targetSec.id === "aboutSection" &&
-        window.aboutSectionActions
-      ) {
-        window.aboutSectionActions.playReveal();
+      // === 1 -> 0: About to Hero ===
+      if (from === 1 && target === 0) {
+        if (heroSec) {
+          heroSec.scrollIntoView({ behavior: "smooth" });
+        } else {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
       }
 
-      targetSec.scrollIntoView({ behavior: "smooth" });
+      // === 2 -> 3: Dotgrid down to Faculty ===
+      if (from === 2 && target === 3) {
+        if (window.shapesSectionActions && window.shapesSectionActions.flyAwayToLeft) {
+          window.shapesSectionActions.flyAwayToLeft();
+        }
+        if (facultySec) {
+          facultySec.scrollIntoView({ behavior: "smooth" });
+        }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
+      }
 
+      // === 3 -> 2: Faculty up to Dotgrid ===
+      if (from === 3 && target === 2) {
+        gsap.set(shapesSec, { x: "0%" });
+        horizontalStage.scrollIntoView({ behavior: "smooth" });
+        if (window.shapesSectionActions && window.shapesSectionActions.flyInFromLeft) {
+          window.shapesSectionActions.flyInFromLeft();
+        }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
+      }
+
+      // === 3 -> 4: Faculty to Footer ===
+      if (from === 3 && target === 4) {
+        if (footerSec) {
+          footerSec.scrollIntoView({ behavior: "smooth" });
+        }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
+      }
+
+      // === 4 -> 3: Footer to Faculty ===
+      if (from === 4 && target === 3) {
+        if (facultySec) {
+          facultySec.scrollIntoView({ behavior: "smooth" });
+        }
+        setTimeout(() => {
+          isTransitioning = false;
+        }, 850);
+        return;
+      }
+
+      // Multi-step jump fallback
+      if (target === 0) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else if (target === 1) {
+        gsap.set(shapesSec, { x: "100%" });
+        horizontalStage.scrollIntoView({ behavior: "smooth" });
+      } else if (target === 2) {
+        gsap.set(shapesSec, { x: "0%" });
+        horizontalStage.scrollIntoView({ behavior: "smooth" });
+      } else if (target === 3 && facultySec) {
+        facultySec.scrollIntoView({ behavior: "smooth" });
+      } else if (target === 4 && footerSec) {
+        footerSec.scrollIntoView({ behavior: "smooth" });
+      }
       setTimeout(() => {
-        isScrolling = false;
-      }, 750);
+        isTransitioning = false;
+      }, 850);
     }
 
-    // Wheel event: 1 small scroll gesture jumps to next/prev section instantly
+    // Wheel event listener: 1 gesture scrolls to the next stage
     window.addEventListener(
       "wheel",
       (e) => {
-        if (isScrolling) {
+        if (isTransitioning) {
           e.preventDefault();
           return;
         }
 
-        if (Math.abs(e.deltaY) > 20) {
+        if (Math.abs(e.deltaY) > 22) {
           e.preventDefault();
-          const currentIndex = getClosestSectionIndex();
+          currentStage = getCurrentStage();
           if (e.deltaY > 0) {
-            goToSection(currentIndex + 1);
+            goToStage(currentStage + 1);
           } else {
-            goToSection(currentIndex - 1);
+            goToStage(currentStage - 1);
           }
         }
       },
@@ -908,14 +1078,15 @@ const PARALLAX_CONFIG = {
 
     // Keyboard navigation (Arrow keys / PageUp / PageDown)
     window.addEventListener("keydown", (e) => {
+      if (isTransitioning) return;
       if (["ArrowDown", "PageDown", "Space"].includes(e.code)) {
         e.preventDefault();
-        const currentIndex = getClosestSectionIndex();
-        goToSection(currentIndex + 1);
+        currentStage = getCurrentStage();
+        goToStage(currentStage + 1);
       } else if (["ArrowUp", "PageUp"].includes(e.code)) {
         e.preventDefault();
-        const currentIndex = getClosestSectionIndex();
-        goToSection(currentIndex - 1);
+        currentStage = getCurrentStage();
+        goToStage(currentStage - 1);
       }
     });
 
@@ -932,15 +1103,15 @@ const PARALLAX_CONFIG = {
     window.addEventListener(
       "touchend",
       (e) => {
-        if (isScrolling) return;
+        if (isTransitioning) return;
         const touchEndY = e.changedTouches[0].clientY;
         const diffY = touchStartY - touchEndY;
-        if (Math.abs(diffY) > 40) {
-          const currentIndex = getClosestSectionIndex();
+        if (Math.abs(diffY) > 45) {
+          currentStage = getCurrentStage();
           if (diffY > 0) {
-            goToSection(currentIndex + 1);
+            goToStage(currentStage + 1);
           } else {
-            goToSection(currentIndex - 1);
+            goToStage(currentStage - 1);
           }
         }
       },
@@ -1037,14 +1208,50 @@ const PARALLAX_CONFIG = {
 
     const { Engine, Runner, Bodies, Composite, Mouse, MouseConstraint, Events } = Matter;
 
-    let engine, runner, floor, leftWall, rightWall, ceiling, pairs = [];
-    let isInitialized = false;
+    let engine = null;
+    let runner = null;
+    let floor = null, leftWall = null, rightWall = null, ceiling = null;
+    let pairs = [];
+    let isRunning = false;
+    let floatTimeout = null;
+    let isFloating = false;
+    let floatingStartTime = 0;
     let isDragging = false;
     let dragStartPos = { x: 0, y: 0 };
 
-    function setupWorld() {
-      if (isInitialized) return;
-      isInitialized = true;
+    const capsuleEls = container.querySelectorAll(".capsule");
+
+    // Initial state: hide capsules until section enters viewport
+    function resetCapsulesDOM() {
+      capsuleEls.forEach((el) => {
+        el.style.opacity = "0";
+        el.style.visibility = "hidden";
+        el.style.transform = "translate3d(0, -250px, 0)";
+      });
+    }
+
+    resetCapsulesDOM();
+
+    // Prevent link click when dragged
+    let dragListenersAttached = false;
+    function attachDragListeners() {
+      if (dragListenersAttached) return;
+      dragListenersAttached = true;
+      container.querySelectorAll("a.capsule").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          if (isDragging) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      });
+    }
+    attachDragListeners();
+
+    function startPhysics() {
+      if (isRunning) return;
+      isRunning = true;
+      isFloating = false;
 
       const width = container.clientWidth || window.innerWidth;
       const height = container.clientHeight || 320;
@@ -1079,7 +1286,6 @@ const PARALLAX_CONFIG = {
       Composite.add(engine.world, [floor, leftWall, rightWall, ceiling]);
 
       // Measure and create rigid bodies for each DOM capsule
-      const capsuleEls = container.querySelectorAll(".capsule");
       const total = capsuleEls.length;
       pairs = [];
 
@@ -1088,9 +1294,9 @@ const PARALLAX_CONFIG = {
         const w = rect.width || (el.classList.contains("capsule-circle") ? 60 : el.classList.contains("capsule-sm") ? 130 : 240);
         const h = rect.height || (el.classList.contains("capsule-circle") ? 60 : el.classList.contains("capsule-sm") ? 56 : 72);
 
-        // Calculate staggered drop positions
-        const xOffset = (width * 0.1) + (index / total) * (width * 0.8) + (Math.random() - 0.5) * 30;
-        const yOffset = -50 - (index * 40) - (Math.random() * 50);
+        // Calculate staggered drop positions from above viewport
+        const xOffset = (width * 0.08) + (index / total) * (width * 0.84) + (Math.random() - 0.5) * 30;
+        const yOffset = -50 - (index * 42) - (Math.random() * 50);
         const parsedRot = parseFloat(el.style.getPropertyValue("--rot")) || (Math.random() * 40 - 20);
         const startAngle = (parsedRot * Math.PI) / 180;
 
@@ -1118,31 +1324,29 @@ const PARALLAX_CONFIG = {
         Composite.add(engine.world, body);
         pairs.push({ el, body, w, h, seed: Math.random() * 100, index });
 
-        // Set immediate initial position so they are visible
+        // Set immediate initial position so they are ready
         el.style.transform = `translate3d(${xOffset - w / 2}px, ${yOffset - h / 2}px, 0px) rotate(${parsedRot}deg)`;
         el.style.opacity = "1";
         el.style.visibility = "visible";
       });
 
-      // State tracking for bounce-to-float transition
-      let isFloating = false;
-      let floatingStartTime = 0;
-
       // Transition to Zero-Gravity Floating after first bounce
-      setTimeout(() => {
+      floatTimeout = setTimeout(() => {
+        if (!isRunning || !engine) return;
         isFloating = true;
         floatingStartTime = Date.now();
         engine.gravity.y = 0;
         engine.gravity.scale = 0.0001;
 
         // Bring ceiling down to top boundary to contain floating bodies
-        Matter.Body.setPosition(ceiling, { x: width / 2, y: -15 });
+        if (ceiling) {
+          Matter.Body.setPosition(ceiling, { x: width / 2, y: -15 });
+        }
 
         // Increase air damping so capsules float smoothly
         pairs.forEach(({ body }) => {
           body.frictionAir = 0.032;
           body.restitution = 0.75;
-          // Apply a gentle buoyant bounce nudge
           Matter.Body.applyForce(body, body.position, {
             x: (Math.random() - 0.5) * 0.004,
             y: -0.006 - Math.random() * 0.004
@@ -1162,7 +1366,6 @@ const PARALLAX_CONFIG = {
 
       Composite.add(engine.world, mouseConstraint);
 
-      // Prevent link navigation if user dragged capsule
       Events.on(mouseConstraint, "startdrag", (e) => {
         isDragging = false;
         dragStartPos = { x: e.mouse.position.x, y: e.mouse.position.y };
@@ -1175,15 +1378,6 @@ const PARALLAX_CONFIG = {
         }
       });
 
-      container.querySelectorAll("a.capsule").forEach((link) => {
-        link.addEventListener("click", (e) => {
-          if (isDragging) {
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        });
-      });
-
       // Physics loop
       Events.on(engine, "beforeUpdate", () => {
         if (!isFloating) return;
@@ -1192,7 +1386,6 @@ const PARALLAX_CONFIG = {
 
         // Apply organic zero-g micro-drift forces to each floating capsule
         pairs.forEach(({ body, seed, index }) => {
-          // Subtle harmonic wave motion
           const fx = Math.sin(time * 1.2 + seed) * 0.00014;
           const fy = Math.cos(time * 0.9 + seed + index) * 0.00012;
           const spin = Math.sin(time * 0.7 + seed) * 0.00003;
@@ -1200,7 +1393,7 @@ const PARALLAX_CONFIG = {
           Matter.Body.applyForce(body, body.position, { x: fx, y: fy });
           Matter.Body.setAngularVelocity(body, body.angularVelocity * 0.98 + spin);
 
-          // Soft buoyant repelling boundaries to keep capsules near the bottom end of page
+          // Soft buoyant repelling boundaries
           const padBottom = 25;
           const padTop = 30;
           const padSides = 30;
@@ -1233,27 +1426,54 @@ const PARALLAX_CONFIG = {
       Runner.run(runner, engine);
     }
 
-    // Initialize physics
+    function stopPhysics() {
+      if (!isRunning) return;
+      isRunning = false;
+
+      if (floatTimeout) {
+        clearTimeout(floatTimeout);
+        floatTimeout = null;
+      }
+
+      if (runner) {
+        Runner.stop(runner);
+        runner = null;
+      }
+
+      if (engine) {
+        Events.off(engine);
+        Composite.clear(engine.world, false, true);
+        Engine.clear(engine);
+        engine = null;
+      }
+
+      pairs = [];
+      resetCapsulesDOM();
+    }
+
+    // Play ONLY when the section is on the viewport
+    const observeTarget = footerSec || container;
     if ("IntersectionObserver" in window) {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
-              setupWorld();
-              observer.disconnect();
+              startPhysics();
+            } else {
+              stopPhysics();
             }
           });
         },
-        { threshold: 0.05, rootMargin: "100px" }
+        { threshold: 0.15 }
       );
-      observer.observe(footerSec || container);
+      observer.observe(observeTarget);
     } else {
-      setupWorld();
+      startPhysics();
     }
 
     // Resize handling to keep walls matched to container
     window.addEventListener("resize", () => {
-      if (!isInitialized || !engine) return;
+      if (!isRunning || !engine || !floor) return;
       const w = container.clientWidth || window.innerWidth;
       const h = container.clientHeight || 320;
 
