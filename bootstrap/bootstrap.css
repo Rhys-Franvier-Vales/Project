@@ -1212,12 +1212,117 @@ body {
   margin-top: auto;
   align-self: flex-start;
   margin-left: 10px;
+  position: relative;
+}
+
+/* Floating shadow on the ground beneath the character */
+.faculty-illustration::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 55%;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  filter: blur(6px);
+  animation: illus-shadow 3.6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .faculty-illustration img {
   width: 100%;
   height: auto;
   display: block;
+  animation: illus-float 3.6s ease-in-out infinite;
+  transform-origin: bottom center;
+  will-change: transform;
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.10));
+}
+
+/* Floating bob + gentle sway */
+@keyframes illus-float {
+  0%   { transform: translateY(0px)   rotate(0deg); }
+  20%  { transform: translateY(-10px) rotate(0.6deg); }
+  50%  { transform: translateY(-18px) rotate(-0.5deg); }
+  80%  { transform: translateY(-10px) rotate(0.4deg); }
+  100% { transform: translateY(0px)   rotate(0deg); }
+}
+
+/* Shadow compresses as image rises, expands as it lands */
+@keyframes illus-shadow {
+  0%   { transform: translateX(-50%) scaleX(1);    opacity: 0.55; }
+  20%  { transform: translateX(-50%) scaleX(0.82); opacity: 0.38; }
+  50%  { transform: translateX(-50%) scaleX(0.62); opacity: 0.20; }
+  80%  { transform: translateX(-50%) scaleX(0.82); opacity: 0.38; }
+  100% { transform: translateX(-50%) scaleX(1);    opacity: 0.55; }
+}
+
+/* ── Floating decorative sparkles around the illustration ── */
+.faculty-illustration .illus-sparkle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkle-drift 3.6s ease-in-out infinite;
+}
+
+.faculty-illustration .illus-sparkle:nth-child(1) {
+  width: 10px;
+  height: 10px;
+  background: #9d88ff;
+  top: 18%;
+  right: -14px;
+  animation-delay: 0s;
+  animation-duration: 3.2s;
+}
+
+.faculty-illustration .illus-sparkle:nth-child(2) {
+  width: 7px;
+  height: 7px;
+  background: #FFA3E0;
+  top: 38%;
+  left: -16px;
+  animation-delay: 0.6s;
+  animation-duration: 4.0s;
+}
+
+.faculty-illustration .illus-sparkle:nth-child(3) {
+  width: 12px;
+  height: 12px;
+  background: #fbfd74;
+  top: 8%;
+  left: 22%;
+  border-radius: 3px;
+  animation-delay: 1.1s;
+  animation-duration: 3.8s;
+}
+
+.faculty-illustration .illus-sparkle:nth-child(4) {
+  width: 6px;
+  height: 6px;
+  background: #54fc7e;
+  bottom: 22%;
+  right: -10px;
+  animation-delay: 1.7s;
+  animation-duration: 4.2s;
+}
+
+.faculty-illustration .illus-sparkle:nth-child(5) {
+  width: 9px;
+  height: 9px;
+  background: #ff6b70;
+  top: 58%;
+  left: -12px;
+  animation-delay: 0.4s;
+  animation-duration: 3.5s;
+}
+
+@keyframes sparkle-drift {
+  0%   { transform: translateY(0px)    scale(1)    opacity; opacity: 0.85; }
+  30%  { transform: translateY(-9px)   scale(1.15);         opacity: 1;    }
+  60%  { transform: translateY(-5px)   scale(0.9);          opacity: 0.70; }
+  100% { transform: translateY(0px)    scale(1);            opacity: 0.85; }
 }
 
 .faculty-home-right {
@@ -1297,6 +1402,324 @@ body {
   font-weight: 400;
   color: #222222;
   line-height: 1.3;
+}
+
+/* ============ COURSE CARD LAYOUT ============ */
+.course-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 36px;
+  align-items: start;
+  padding-bottom: 36px;
+}
+
+.course-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.course-badge-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.course-dept-badge {
+  display: inline-block;
+  background: #000000;
+  color: #ffffff;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.course-scheme-badge {
+  display: inline-block;
+  background: transparent;
+  color: #000000;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1.2px solid #000000;
+}
+
+.course-card-title {
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.15;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.course-card-subtitle {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #333333;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.course-card-desc {
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.course-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.course-stat-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.course-stat-box:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.course-stat-label {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #666666;
+}
+
+.course-stat-value {
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.01em;
+}
+
+.course-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.course-btn-primary {
+  display: inline-block;
+  background: #000000;
+  color: #ffffff;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 11px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.course-btn-primary:hover {
+  background: #222222;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+  color: #ffffff;
+}
+
+.course-btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: #000000;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  border: 1.5px solid rgba(0, 0, 0, 0.65);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.course-btn-secondary:hover {
+  border-color: #000000;
+  background: rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  color: #000000;
+}
+
+/* Right column: info blocks */
+.course-card-right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.course-info-block {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 16px 18px;
+  transition: background 0.2s ease;
+}
+
+.course-info-block:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.course-info-header {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #000000;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.course-info-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.course-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.course-tag {
+  display: inline-block;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #000000;
+  border: 1.2px solid rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  padding: 4px 10px;
+  transition: background 0.18s ease, color 0.18s ease;
+  cursor: default;
+}
+
+.course-tag:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+.course-pathways {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.course-pathways li {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #222222;
+  line-height: 1.5;
+}
+
+.course-pathways li strong {
+  font-weight: 600;
+  color: #000000;
+}
+
+.course-highlight-block {
+  border: 1.5px dashed rgba(0, 0, 0, 0.45);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.course-highlight-label {
+  display: inline-block;
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  background: #000000;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.course-highlight-text {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #222222;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.course-highlight-text strong {
+  font-weight: 600;
+  color: #000000;
+}
+
+/* Per-tab color theming for tags/highlights */
+.faculty-content[data-content="bcavoc"] .course-tag:hover {
+  background: #5e45ff;
+  border-color: #5e45ff;
+  color: #fff;
+}
+
+.faculty-content[data-content="bcom"] .course-tag:hover {
+  background: #b5b600;
+  border-color: #b5b600;
+  color: #fff;
+}
+
+.faculty-content[data-content="bba"] .course-tag:hover {
+  background: #1ca83c;
+  border-color: #1ca83c;
+  color: #fff;
+}
+
+.faculty-content[data-content="mcom"] .course-tag:hover {
+  background: #d92a2f;
+  border-color: #d92a2f;
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  .course-card-grid {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .course-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 900px) {
@@ -1521,5 +1944,716 @@ body {
   .capsule-circle {
     width: 44px;
     height: 44px;
+  }
+}
+
+/* ==========================================================================
+   ██████  ███████ ███████ ██████   ██████  ███    ██ ███████ ██ ██    ██ ███████
+   ██   ██ ██      ██      ██   ██ ██    ██ ████   ██ ██      ██ ██    ██ ██
+   ██████  █████   ███████ ██████  ██    ██ ██ ██  ██ ███████ ██ ██    ██ █████
+   ██   ██ ██           ██ ██      ██    ██ ██  ██ ██      ██ ██  ██  ██  ██
+   ██   ██ ███████ ███████ ██       ██████  ██   ████ ███████ ██   ████   ███████
+   ========================================================================== */
+
+/* ============ HAMBURGER BUTTON ============ */
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  border: 1px solid #000;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+  z-index: 200;
+}
+
+.hamburger-btn:hover {
+  background: #f5f5f5;
+}
+
+.hamburger-bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #000;
+  border-radius: 2px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  transform-origin: center;
+}
+
+/* Animated X when open */
+.hamburger-btn.is-open .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-btn.is-open .hamburger-bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger-btn.is-open .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ============ MOBILE NAV OVERLAY & DRAWER ============ */
+.mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 500;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.mobile-nav-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-nav-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: min(320px, 88vw);
+  height: 100%;
+  background: #ffffff;
+  padding: 24px 0 40px;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.mobile-nav-overlay.open .mobile-nav-drawer {
+  transform: translateX(0);
+}
+
+.mobile-nav-close {
+  align-self: flex-end;
+  margin-right: 20px;
+  margin-bottom: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: #000;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.mobile-nav-close:hover {
+  background: #f0f0f0;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+  gap: 4px;
+}
+
+.mobile-nav-link {
+  display: block;
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: opacity 0.15s ease;
+}
+
+.mobile-nav-link:hover {
+  opacity: 0.65;
+}
+
+.mobile-nav-group {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mobile-nav-summary {
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #000;
+  padding: 12px 0;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.mobile-nav-summary::-webkit-details-marker {
+  display: none;
+}
+
+.mobile-nav-summary::after {
+  content: "+";
+  font-size: 20px;
+  font-weight: 300;
+  transition: transform 0.2s ease;
+}
+
+details[open] > .mobile-nav-summary::after {
+  transform: rotate(45deg);
+}
+
+.mobile-nav-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 0 12px 12px;
+}
+
+.mobile-nav-sub a {
+  font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #333;
+  text-decoration: none;
+  padding: 8px 0;
+  display: block;
+  border-bottom: 1px solid #f8f8f8;
+  transition: color 0.15s ease;
+}
+
+.mobile-nav-sub a:hover {
+  color: #000;
+}
+
+.mobile-v-connect-btn {
+  display: block;
+  margin: 20px 0 0;
+  background: #000;
+  color: #fff;
+  font-family: "Funnel Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 14px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.mobile-v-connect-btn:hover {
+  background: #222;
+  color: #fff;
+}
+
+/* ============ 1024px — Tablets Landscape ============ */
+@media (max-width: 1024px) {
+  .site-nav {
+    gap: 20px;
+    padding: 10px 18px;
+  }
+
+  .faculty-panel {
+    padding: 40px 36px 0;
+  }
+
+  .course-card-grid {
+    column-gap: 24px;
+  }
+
+  .popup-inner {
+    padding: 0;
+  }
+}
+
+/* ============ 900px — Tablets Portrait ============ */
+@media (max-width: 900px) {
+  /* Navbar: hide desktop nav, show hamburger */
+  .site-nav {
+    display: none;
+  }
+
+  .v-connect-btn {
+    display: none;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .header-inner {
+    justify-content: space-between;
+    flex-wrap: nowrap;
+  }
+
+  /* Hero Section */
+  .parallax-wrapper {
+    padding: 12px 10px 24px;
+  }
+
+  .parallax-section {
+    aspect-ratio: auto;
+    height: 55vw;
+    min-height: 260px;
+    max-height: 460px;
+  }
+
+  /* About section layout */
+  .popup-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .popup-copy {
+    max-width: 100%;
+  }
+
+  /* Dotgrid sticky notes */
+  .sticky-notes {
+    column-gap: 30px;
+  }
+
+  .note-vision,
+  .note-academics {
+    width: min(280px, 44vw);
+  }
+
+  .note-mission {
+    width: min(360px, 60vw);
+  }
+
+  .note-text {
+    font-size: 18px;
+  }
+
+  .note-label {
+    font-size: 26px;
+  }
+
+  /* Faculty tabs */
+  .faculty-section {
+    padding: 40px 4% 60px;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .faculty-panel {
+    padding: 32px 24px;
+    min-height: auto;
+  }
+
+  /* Course cards stack vertically */
+  .course-card-grid {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .course-card-right {
+    gap: 10px;
+  }
+
+  /* Footer */
+  .footer-section {
+    height: auto;
+    min-height: 100vh;
+    padding: 40px 5% 30px;
+  }
+
+  .footer-contact-grid {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* ============ 768px — Tablets / Large Mobile ============ */
+@media (max-width: 768px) {
+  /* Snap scroll disabled on mobile for better UX */
+  html {
+    scroll-snap-type: none;
+  }
+
+  .snap-section {
+    scroll-snap-align: none;
+    scroll-snap-stop: unset;
+    height: auto;
+    min-height: 100svh;
+  }
+
+  .hero-snap-section {
+    height: 100svh;
+  }
+
+  /* Header */
+  .site-header {
+    padding: 12px 16px;
+  }
+
+  .site-logo {
+    height: 44px;
+  }
+
+  /* Hero parallax */
+  :root {
+    --parallax-radius: 20px;
+  }
+
+  .parallax-wrapper {
+    padding: 10px 8px 20px;
+  }
+
+  .parallax-section {
+    height: 52vw;
+    min-height: 240px;
+    max-height: 400px;
+  }
+
+  /* Horizontal stage: sections stack instead of slide */
+  .horizontal-stage {
+    height: auto;
+    min-height: auto;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .horizontal-stage .popup-section {
+    position: relative;
+    transform: none !important;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+  }
+
+  .horizontal-stage .dotgrid-section {
+    position: relative;
+    transform: none !important;
+    width: 100%;
+    height: auto;
+    min-height: 100svh;
+    box-shadow: none;
+  }
+
+  /* About section */
+  .popup-section {
+    padding: 48px 5% 0;
+  }
+
+  .popup-heading {
+    font-size: clamp(1.7rem, 5.5vw, 2.8rem);
+    margin-bottom: 18px;
+  }
+
+  .popup-copy {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    margin-bottom: 20px;
+  }
+
+  .popup-gallery {
+    padding-top: 100px;
+    margin-bottom: -120px;
+  }
+
+  /* Dotgrid */
+  .dotgrid-section {
+    padding: 48px 5%;
+    min-height: 100svh;
+    height: auto;
+  }
+
+  .dotgrid-heading {
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    margin-bottom: 30px;
+  }
+
+  .sticky-notes {
+    grid-template-columns: 1fr;
+    max-width: 320px;
+    row-gap: 20px;
+  }
+
+  .sticky-note {
+    width: 100%;
+    min-height: auto;
+    margin: 0 !important;
+  }
+
+  .note-vision { grid-column: 1; transform: rotate(-2deg); }
+  .note-academics { grid-column: 1; transform: rotate(3deg); margin-top: 0; margin-left: 0; }
+  .note-mission { grid-column: 1; width: 100%; margin-top: 0; margin-left: 0; }
+
+  /* Faculty */
+  .faculty-section {
+    padding: 36px 4% 48px;
+    height: auto;
+    min-height: auto;
+  }
+
+  .faculty-heading {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    margin-bottom: 24px;
+  }
+
+  .faculty-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
+  }
+
+  .faculty-tabs::-webkit-scrollbar { display: none; }
+
+  .faculty-tab {
+    font-size: 12px;
+    padding: 10px 12px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .faculty-panel {
+    padding: 28px 18px;
+    border-radius: 0 0 14px 14px;
+  }
+
+  .faculty-home-grid {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .faculty-subheading {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+  }
+
+  .faculty-illustration {
+    max-width: 220px;
+    margin: 16px auto 0;
+  }
+
+  .faculty-tickets {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .faculty-ticket {
+    padding: 12px 16px;
+    min-height: 68px;
+  }
+
+  .faculty-ticket-label {
+    font-size: 1.1rem;
+    min-width: 90px;
+  }
+
+  /* Course cards */
+  .course-card-title {
+    font-size: clamp(1.4rem, 5vw, 1.9rem);
+  }
+
+  .course-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .course-stat-box {
+    padding: 10px 12px;
+  }
+
+  .course-actions {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Footer */
+  .footer-section {
+    height: auto;
+    min-height: auto;
+    padding: 36px 5% 30px;
+  }
+
+  .footer-heading {
+    font-size: clamp(2rem, 6vw, 3rem);
+  }
+
+  .footer-contact-text {
+    font-size: 14px;
+  }
+
+  .footer-capsules {
+    min-height: 200px;
+    max-height: 280px;
+  }
+}
+
+/* ============ 600px — Mobile ============ */
+@media (max-width: 600px) {
+  /* Hero */
+  .parallax-section {
+    height: 56vw;
+    min-height: 200px;
+  }
+
+  .parallax-section .parallax-title {
+    font-size: clamp(2rem, 12vw, 5rem);
+    padding-top: 12%;
+  }
+
+  /* About */
+  .popup-section {
+    padding: 36px 5% 0;
+  }
+
+  .popup-gallery {
+    padding-top: 80px;
+    margin-bottom: -100px;
+  }
+
+  .read-more-btn {
+    font-size: 15px;
+    padding: 8px 20px;
+  }
+
+  /* Faculty tabs scroll */
+  .faculty-tab {
+    font-size: 11px;
+    padding: 9px 10px 11px;
+    clip-path: none;
+    border-radius: 6px 6px 0 0;
+    margin-right: -2px;
+  }
+
+  .faculty-panel {
+    padding: 22px 14px;
+  }
+
+  .faculty-ticket-label {
+    font-size: 1rem;
+    min-width: 76px;
+  }
+
+  .faculty-ticket-title {
+    font-size: 13px;
+  }
+
+  .faculty-ticket-desc {
+    font-size: 12px;
+  }
+
+  /* Course cards */
+  .course-badge-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .course-stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  .course-stat-value {
+    font-size: 13.5px;
+  }
+
+  .course-tag {
+    font-size: 10.5px;
+    padding: 3.5px 8px;
+  }
+
+  .course-btn-primary,
+  .course-btn-secondary {
+    font-size: 12px;
+    padding: 9px 14px;
+  }
+
+  /* Footer */
+  .footer-heading {
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+  }
+}
+
+/* ============ 480px — Small Mobile ============ */
+@media (max-width: 480px) {
+  .site-logo {
+    height: 38px;
+  }
+
+  /* Hero */
+  .parallax-wrapper {
+    padding: 8px 6px 16px;
+  }
+
+  .parallax-section {
+    height: 60vw;
+    min-height: 180px;
+  }
+
+  /* About */
+  .popup-heading {
+    font-size: clamp(1.45rem, 6vw, 2rem);
+  }
+
+  /* Dotgrid */
+  .dotgrid-heading {
+    font-size: clamp(1.7rem, 7vw, 2.4rem);
+  }
+
+  .note-label {
+    font-size: 22px;
+  }
+
+  .note-text {
+    font-size: 15px;
+  }
+
+  /* Faculty */
+  .faculty-heading {
+    font-size: clamp(1.6rem, 6.5vw, 2rem);
+  }
+
+  .course-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-card-title {
+    font-size: clamp(1.25rem, 5.5vw, 1.6rem);
+  }
+
+  .course-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .course-btn-primary,
+  .course-btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Footer */
+  .footer-section {
+    padding: 28px 5% 24px;
+  }
+
+  .footer-heading {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .footer-capsules {
+    min-height: 160px;
+    max-height: 220px;
   }
 }

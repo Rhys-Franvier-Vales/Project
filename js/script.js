@@ -1531,3 +1531,53 @@ if (facultySection && "IntersectionObserver" in window) {
 
   selectObserver.observe(facultySection);
 }
+
+// =========================================================================
+// 🍔 HAMBURGER MENU — Mobile drawer toggle
+// =========================================================================
+(function () {
+  const hamburgerBtn = document.getElementById("hamburgerBtn");
+  const overlay = document.getElementById("mobileNavOverlay");
+  const drawer = document.getElementById("mobileNavDrawer");
+  const closeBtn = document.getElementById("mobileNavClose");
+
+  if (!hamburgerBtn || !overlay || !drawer) return;
+
+  function openDrawer() {
+    overlay.classList.add("open");
+    overlay.setAttribute("aria-hidden", "false");
+    hamburgerBtn.setAttribute("aria-expanded", "true");
+    hamburgerBtn.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeDrawer() {
+    overlay.classList.remove("open");
+    overlay.setAttribute("aria-hidden", "true");
+    hamburgerBtn.setAttribute("aria-expanded", "false");
+    hamburgerBtn.classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+
+  hamburgerBtn.addEventListener("click", () => {
+    if (overlay.classList.contains("open")) {
+      closeDrawer();
+    } else {
+      openDrawer();
+    }
+  });
+
+  if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+
+  // Close on overlay backdrop click
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) closeDrawer();
+  });
+
+  // Close on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay.classList.contains("open")) {
+      closeDrawer();
+    }
+  });
+})();
